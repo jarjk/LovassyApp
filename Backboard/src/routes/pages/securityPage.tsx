@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { IconCheck } from "@tabler/icons-react";
 import { ResetKeyPasswordInput } from "../../components/resetKeyPasswordInput";
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { preferencesStore } from "../../preferencesStore";
 import { useSecurityStore } from "../../stores/securityStore";
 import { useSettingStore } from "../../stores/settingsStore";

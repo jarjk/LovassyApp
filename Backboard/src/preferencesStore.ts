@@ -1,7 +1,7 @@
 import { StateStorage } from "zustand/middleware";
-import { Store } from "@tauri-apps/plugin-store";
+import { LazyStore } from "@tauri-apps/plugin-store";
 
-export const preferencesStore = new Store(".preferences.dat");
+export const preferencesStore = new LazyStore(".preferences.dat");
 
 export const preferencesStorage: StateStorage = {
     getItem: async (name: string): Promise<string | null> => {

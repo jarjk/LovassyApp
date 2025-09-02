@@ -3,7 +3,7 @@ import { UnlistenFn, listen } from "@tauri-apps/api/event";
 import { useEffect, useState } from "react";
 
 import { IconCheck } from "@tabler/icons-react";
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { notifications } from "@mantine/notifications";
 import { open } from "@tauri-apps/plugin-dialog";
 import { preferencesStore } from "../../preferencesStore";
