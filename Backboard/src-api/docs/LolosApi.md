@@ -11,7 +11,7 @@ Method | HTTP request | Description
 
 ## api_lolos_get
 
-> Vec<crate::models::ShopIndexLolosResponse> api_lolos_get(filters, sorts, page, page_size)
+> Vec<models::ShopIndexLolosResponse> api_lolos_get(filters, sorts, page, page_size)
 Get a list of all lolo coins
 
 Requires verified email; Requires one of the following permissions: Shop.IndexLolos; Requires the following features to be enabled: Shop
@@ -28,7 +28,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**Vec<crate::models::ShopIndexLolosResponse>**](ShopIndexLolosResponse.md)
+[**Vec<models::ShopIndexLolosResponse>**](ShopIndexLolosResponse.md)
 
 ### Authorization
 
@@ -44,7 +44,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_lolos_own_get
 
-> crate::models::ShopIndexOwnLolosResponse api_lolos_own_get(filters, sorts, page, page_size)
+> models::ShopIndexOwnLolosResponse api_lolos_own_get(filters, sorts, page, page_size)
 Get a list of the user's lolo coins
 
 Requires verified email; Requires one of the following permissions: Shop.IndexOwnLolos; Requires the following features to be enabled: Shop
@@ -61,7 +61,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::ShopIndexOwnLolosResponse**](ShopIndexOwnLolosResponse.md)
+[**models::ShopIndexOwnLolosResponse**](ShopIndexOwnLolosResponse.md)
 
 ### Authorization
 

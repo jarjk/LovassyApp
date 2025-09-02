@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 **name** | **String** |  | 
 **description** | **String** |  | 
 **r#type** | **String** |  | 
-**aspects** | [**Vec<crate::models::ImageVotingsUpdateImageVotingRequestBodyImageVotingAspect>**](ImageVotingsUpdateImageVotingRequestBodyImageVotingAspect.md) |  | 
+**aspects** | [**Vec<models::ImageVotingsUpdateImageVotingRequestBodyImageVotingAspect>**](ImageVotingsUpdateImageVotingRequestBodyImageVotingAspect.md) |  | 
 **active** | **bool** |  | 
 **show_uploader_info** | **bool** |  | 
 **uploader_user_group_id** | **i32** |  | 

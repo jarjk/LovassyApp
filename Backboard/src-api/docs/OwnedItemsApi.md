@@ -16,7 +16,7 @@ Method | HTTP request | Description
 
 ## api_owned_items_get
 
-> Vec<crate::models::ShopIndexOwnedItemsResponse> api_owned_items_get(filters, sorts, page, page_size, search)
+> Vec<models::ShopIndexOwnedItemsResponse> api_owned_items_get(filters, sorts, page, page_size, search)
 Get a list of all owned items
 
 Requires verified email; Requires one of the following permissions: Shop.IndexOwnedItems; Requires the following features to be enabled: Shop
@@ -34,7 +34,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**Vec<crate::models::ShopIndexOwnedItemsResponse>**](ShopIndexOwnedItemsResponse.md)
+[**Vec<models::ShopIndexOwnedItemsResponse>**](ShopIndexOwnedItemsResponse.md)
 
 ### Authorization
 
@@ -80,7 +80,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_owned_items_id_get
 
-> crate::models::ShopViewOwnedItemResponse api_owned_items_id_get(id)
+> models::ShopViewOwnedItemResponse api_owned_items_id_get(id)
 Get information about an owned item
 
 Requires verified email; Requires one of the following permissions: Shop.ViewOwnedItem, Shop.ViewOwnOwnedItem; Requires the following features to be enabled: Shop
@@ -94,7 +94,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::ShopViewOwnedItemResponse**](ShopViewOwnedItemResponse.md)
+[**models::ShopViewOwnedItemResponse**](ShopViewOwnedItemResponse.md)
 
 ### Authorization
 
@@ -172,7 +172,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_owned_items_own_get
 
-> Vec<crate::models::ShopIndexOwnOwnedItemsResponse> api_owned_items_own_get(filters, sorts, page, page_size, search)
+> Vec<models::ShopIndexOwnOwnedItemsResponse> api_owned_items_own_get(filters, sorts, page, page_size, search)
 Get a list of the current user's owned items
 
 Requires verified email; Requires one of the following permissions: Shop.IndexOwnOwnedItems; Requires the following features to be enabled: Shop
@@ -190,7 +190,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**Vec<crate::models::ShopIndexOwnOwnedItemsResponse>**](ShopIndexOwnOwnedItemsResponse.md)
+[**Vec<models::ShopIndexOwnOwnedItemsResponse>**](ShopIndexOwnOwnedItemsResponse.md)
 
 ### Authorization
 
@@ -206,7 +206,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_owned_items_post
 
-> crate::models::ShopCreateOwnedItemResponse api_owned_items_post(shop_create_owned_item_request_body)
+> models::ShopCreateOwnedItemResponse api_owned_items_post(shop_create_owned_item_request_body)
 Create a new owned item
 
 Requires verified email; Requires one of the following permissions: Shop.CreateOwnedItem; Requires the following features to be enabled: Shop
@@ -220,7 +220,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::ShopCreateOwnedItemResponse**](ShopCreateOwnedItemResponse.md)
+[**models::ShopCreateOwnedItemResponse**](ShopCreateOwnedItemResponse.md)
 
 ### Authorization
 

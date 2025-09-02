@@ -14,7 +14,7 @@ Method | HTTP request | Description
 
 ## api_import_keys_get
 
-> Vec<crate::models::ImportIndexImportKeysResponse> api_import_keys_get(filters, sorts, page, page_size)
+> Vec<models::ImportIndexImportKeysResponse> api_import_keys_get(filters, sorts, page, page_size)
 Get a list of all import keys
 
 Requires verified email; Requires one of the following permissions: Import.IndexImportKeys; Requires the following features to be enabled: Import
@@ -31,7 +31,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**Vec<crate::models::ImportIndexImportKeysResponse>**](ImportIndexImportKeysResponse.md)
+[**Vec<models::ImportIndexImportKeysResponse>**](ImportIndexImportKeysResponse.md)
 
 ### Authorization
 
@@ -77,7 +77,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_import_keys_id_get
 
-> crate::models::ImportViewImportKeyResponse api_import_keys_id_get(id)
+> models::ImportViewImportKeyResponse api_import_keys_id_get(id)
 Get information about an import key
 
 Requires verified email; Requires one of the following permissions: Import.ViewImportKey; Requires the following features to be enabled: Import
@@ -91,7 +91,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::ImportViewImportKeyResponse**](ImportViewImportKeyResponse.md)
+[**models::ImportViewImportKeyResponse**](ImportViewImportKeyResponse.md)
 
 ### Authorization
 
@@ -138,7 +138,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_import_keys_post
 
-> crate::models::ImportCreateImportKeyResponse api_import_keys_post(import_create_import_key_request_body)
+> models::ImportCreateImportKeyResponse api_import_keys_post(import_create_import_key_request_body)
 Create a new import key
 
 Requires verified email; Requires one of the following permissions: Import.CreateImportKey; Requires the following features to be enabled: Import
@@ -152,7 +152,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::ImportCreateImportKeyResponse**](ImportCreateImportKeyResponse.md)
+[**models::ImportCreateImportKeyResponse**](ImportCreateImportKeyResponse.md)
 
 ### Authorization
 

@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | Option<**i32**> |  | [optional]
 **user_id** | Option<[**uuid::Uuid**](uuid::Uuid.md)> |  | [optional]
-**product** | Option<[**crate::models::ShopViewOwnedItemResponseProduct**](ShopViewOwnedItemResponseProduct.md)> |  | [optional]
+**product** | Option<[**models::ShopViewOwnedItemResponseProduct**](ShopViewOwnedItemResponseProduct.md)> |  | [optional]
 **used_at** | Option<**String**> |  | [optional]
 **created_at** | Option<**String**> |  | [optional]
 **updated_at** | Option<**String**> |  | [optional]

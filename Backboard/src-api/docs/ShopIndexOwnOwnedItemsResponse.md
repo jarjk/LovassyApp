@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | Option<**i32**> |  | [optional]
-**product** | Option<[**crate::models::ShopIndexOwnOwnedItemsResponseProduct**](ShopIndexOwnOwnedItemsResponseProduct.md)> |  | [optional]
+**product** | Option<[**models::ShopIndexOwnOwnedItemsResponseProduct**](ShopIndexOwnOwnedItemsResponseProduct.md)> |  | [optional]
 **used_at** | Option<**String**> |  | [optional]
 **created_at** | Option<**String**> |  | [optional]
 **updated_at** | Option<**String**> |  | [optional]

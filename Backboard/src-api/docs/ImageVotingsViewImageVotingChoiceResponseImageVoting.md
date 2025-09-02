@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **name** | Option<**String**> |  | [optional]
 **description** | Option<**String**> |  | [optional]
 **r#type** | Option<**String**> |  | [optional]
-**aspects** | Option<[**Vec<crate::models::ImageVotingsViewImageVotingChoiceResponseImageVotingAspect>**](ImageVotingsViewImageVotingChoiceResponseImageVotingAspect.md)> |  | [optional]
+**aspects** | Option<[**Vec<models::ImageVotingsViewImageVotingChoiceResponseImageVotingAspect>**](ImageVotingsViewImageVotingChoiceResponseImageVotingAspect.md)> |  | [optional]
 **active** | Option<**bool**> |  | [optional]
 **show_uploader_info** | Option<**bool**> |  | [optional]
 **super_increment_allowed** | Option<**bool**> |  | [optional]

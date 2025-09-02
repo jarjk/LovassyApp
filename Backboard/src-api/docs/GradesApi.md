@@ -10,7 +10,7 @@ Method | HTTP request | Description
 
 ## api_grades_get
 
-> Vec<crate::models::SchoolIndexGradesResponse> api_grades_get(filters, sorts, page, page_size)
+> Vec<models::SchoolIndexGradesResponse> api_grades_get(filters, sorts, page, page_size)
 Get a list of the current user's grades
 
 Requires verified email; Requires one of the following permissions: School.IndexGrades; Requires the following features to be enabled: School
@@ -27,7 +27,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**Vec<crate::models::SchoolIndexGradesResponse>**](SchoolIndexGradesResponse.md)
+[**Vec<models::SchoolIndexGradesResponse>**](SchoolIndexGradesResponse.md)
 
 ### Authorization
 

@@ -17,7 +17,7 @@ Method | HTTP request | Description
 
 ## api_auth_control_get
 
-> crate::models::AuthViewControlResponse api_auth_control_get()
+> models::AuthViewControlResponse api_auth_control_get()
 Get information about the current user
 
 Requires one of the following permissions: Auth.Control
@@ -28,7 +28,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**crate::models::AuthViewControlResponse**](AuthViewControlResponse.md)
+[**models::AuthViewControlResponse**](AuthViewControlResponse.md)
 
 ### Authorization
 
@@ -44,7 +44,7 @@ This endpoint does not need any parameter.
 
 ## api_auth_login_post
 
-> crate::models::AuthLoginResponse api_auth_login_post(auth_login_request_body)
+> models::AuthLoginResponse api_auth_login_post(auth_login_request_body)
 Create a new session for a user
 
 ### Parameters
@@ -56,7 +56,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::AuthLoginResponse**](AuthLoginResponse.md)
+[**models::AuthLoginResponse**](AuthLoginResponse.md)
 
 ### Authorization
 
@@ -97,7 +97,7 @@ This endpoint does not need any parameter.
 
 ## api_auth_refresh_post
 
-> crate::models::AuthRefreshResponse api_auth_refresh_post(token)
+> models::AuthRefreshResponse api_auth_refresh_post(token)
 Refresh a user's session
 
 ### Parameters
@@ -109,7 +109,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::AuthRefreshResponse**](AuthRefreshResponse.md)
+[**models::AuthRefreshResponse**](AuthRefreshResponse.md)
 
 ### Authorization
 

@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **quantity** | **i32** |  | 
 **user_limited** | **bool** |  | 
 **user_limit** | **i32** |  | 
-**inputs** | [**Vec<crate::models::ShopUpdateProductRequestBodyInput>**](ShopUpdateProductRequestBodyInput.md) |  | 
+**inputs** | [**Vec<models::ShopUpdateProductRequestBodyInput>**](ShopUpdateProductRequestBodyInput.md) |  | 
 **notified_emails** | **Vec<String>** |  | 
 **thumbnail_url** | **String** |  | 
 

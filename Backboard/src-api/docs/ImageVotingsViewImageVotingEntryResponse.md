@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **title** | Option<**String**> |  | [optional]
 **image_url** | Option<**String**> |  | [optional]
 **user_id** | Option<[**uuid::Uuid**](uuid::Uuid.md)> |  | [optional]
-**user** | Option<[**crate::models::ImageVotingsViewImageVotingEntryResponseUser**](ImageVotingsViewImageVotingEntryResponseUser.md)> |  | [optional]
+**user** | Option<[**models::ImageVotingsViewImageVotingEntryResponseUser**](ImageVotingsViewImageVotingEntryResponseUser.md)> |  | [optional]
 **image_voting_id** | Option<**i32**> |  | [optional]
 **can_choose** | Option<**bool**> |  | [optional]
 **chosen** | Option<**bool**> |  | [optional]

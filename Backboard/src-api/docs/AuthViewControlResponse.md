@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**user** | Option<[**crate::models::AuthViewControlResponseUser**](AuthViewControlResponseUser.md)> |  | [optional]
-**session** | Option<[**crate::models::AuthViewControlResponseSession**](AuthViewControlResponseSession.md)> |  | [optional]
+**user** | Option<[**models::AuthViewControlResponseUser**](AuthViewControlResponseUser.md)> |  | [optional]
+**session** | Option<[**models::AuthViewControlResponseSession**](AuthViewControlResponseSession.md)> |  | [optional]
 **is_super_user** | Option<**bool**> |  | [optional]
 **user_groups** | Option<**Vec<String>**> |  | [optional]
 **permissions** | Option<**Vec<String>**> |  | [optional]

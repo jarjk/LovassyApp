@@ -15,7 +15,7 @@ Method | HTTP request | Description
 
 ## api_image_votings_get
 
-> Vec<crate::models::ImageVotingsIndexImageVotingsResponse> api_image_votings_get(filters, sorts, page, page_size)
+> Vec<models::ImageVotingsIndexImageVotingsResponse> api_image_votings_get(filters, sorts, page, page_size)
 Get a list of image votings
 
 Requires verified email; Requires one of the following permissions: ImageVotings.IndexImageVotings, ImageVotings.IndexActiveImageVotings; Requires the following features to be enabled: ImageVotings
@@ -32,7 +32,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**Vec<crate::models::ImageVotingsIndexImageVotingsResponse>**](ImageVotingsIndexImageVotingsResponse.md)
+[**Vec<models::ImageVotingsIndexImageVotingsResponse>**](ImageVotingsIndexImageVotingsResponse.md)
 
 ### Authorization
 
@@ -78,7 +78,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_image_votings_id_get
 
-> crate::models::ImageVotingsViewImageVotingResponse api_image_votings_id_get(id)
+> models::ImageVotingsViewImageVotingResponse api_image_votings_id_get(id)
 Get information about an image voting
 
 Requires verified email; Requires one of the following permissions: ImageVotings.ViewImageVoting, ImageVotings.ViewActiveImageVoting; Requires the following features to be enabled: ImageVotings
@@ -92,7 +92,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::ImageVotingsViewImageVotingResponse**](ImageVotingsViewImageVotingResponse.md)
+[**models::ImageVotingsViewImageVotingResponse**](ImageVotingsViewImageVotingResponse.md)
 
 ### Authorization
 
@@ -139,7 +139,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_image_votings_id_results_get
 
-> crate::models::ImageVotingsViewImageVotingResultsResponse api_image_votings_id_results_get(id)
+> models::ImageVotingsViewImageVotingResultsResponse api_image_votings_id_results_get(id)
 Get results of an image voting
 
 Requires verified email; Requires one of the following permissions: ImageVotings.ViewImageVotingResults, ImageVotings.ViewActiveImageVotingResults; Requires the following features to be enabled: ImageVotings
@@ -153,7 +153,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::ImageVotingsViewImageVotingResultsResponse**](ImageVotingsViewImageVotingResultsResponse.md)
+[**models::ImageVotingsViewImageVotingResultsResponse**](ImageVotingsViewImageVotingResultsResponse.md)
 
 ### Authorization
 
@@ -169,7 +169,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_image_votings_post
 
-> crate::models::ImageVotingsCreateImageVotingResponse api_image_votings_post(image_votings_create_image_voting_request_body)
+> models::ImageVotingsCreateImageVotingResponse api_image_votings_post(image_votings_create_image_voting_request_body)
 Create a new image voting
 
 Requires verified email; Requires one of the following permissions: ImageVotings.CreateImageVoting; Requires the following features to be enabled: ImageVotings
@@ -183,7 +183,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::ImageVotingsCreateImageVotingResponse**](ImageVotingsCreateImageVotingResponse.md)
+[**models::ImageVotingsCreateImageVotingResponse**](ImageVotingsCreateImageVotingResponse.md)
 
 ### Authorization
 

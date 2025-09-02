@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **description** | Option<**String**> |  | [optional]
 **rich_text_content** | Option<**String**> |  | [optional]
 **qr_code_activated** | Option<**bool**> |  | [optional]
-**inputs** | Option<[**Vec<crate::models::ShopCreateOwnedItemResponseProductInput>**](ShopCreateOwnedItemResponseProductInput.md)> |  | [optional]
+**inputs** | Option<[**Vec<models::ShopCreateOwnedItemResponseProductInput>**](ShopCreateOwnedItemResponseProductInput.md)> |  | [optional]
 **thumbnail_url** | Option<**String**> |  | [optional]
 **created_at** | Option<**String**> |  | [optional]
 **updated_at** | Option<**String**> |  | [optional]

@@ -14,7 +14,7 @@ Method | HTTP request | Description
 
 ## api_user_groups_get
 
-> Vec<crate::models::AuthIndexUserGroupsResponse> api_user_groups_get(filters, sorts, page, page_size)
+> Vec<models::AuthIndexUserGroupsResponse> api_user_groups_get(filters, sorts, page, page_size)
 Get a list of all user groups
 
 Requires verified email; Requires one of the following permissions: Auth.IndexUserGroups
@@ -31,7 +31,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**Vec<crate::models::AuthIndexUserGroupsResponse>**](AuthIndexUserGroupsResponse.md)
+[**Vec<models::AuthIndexUserGroupsResponse>**](AuthIndexUserGroupsResponse.md)
 
 ### Authorization
 
@@ -77,7 +77,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_user_groups_id_get
 
-> crate::models::AuthViewUserGroupResponse api_user_groups_id_get(id)
+> models::AuthViewUserGroupResponse api_user_groups_id_get(id)
 Get information about a user group
 
 Requires verified email; Requires one of the following permissions: Auth.ViewUserGroup
@@ -91,7 +91,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::AuthViewUserGroupResponse**](AuthViewUserGroupResponse.md)
+[**models::AuthViewUserGroupResponse**](AuthViewUserGroupResponse.md)
 
 ### Authorization
 
@@ -138,7 +138,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_user_groups_post
 
-> crate::models::AuthCreateUserGroupResponse api_user_groups_post(auth_create_user_group_request_body)
+> models::AuthCreateUserGroupResponse api_user_groups_post(auth_create_user_group_request_body)
 Create a new user group
 
 Requires verified email; Requires one of the following permissions: Auth.CreateUserGroup
@@ -152,7 +152,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::AuthCreateUserGroupResponse**](AuthCreateUserGroupResponse.md)
+[**models::AuthCreateUserGroupResponse**](AuthCreateUserGroupResponse.md)
 
 ### Authorization
 
