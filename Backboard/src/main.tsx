@@ -7,8 +7,9 @@ import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import ReactDOM from "react-dom/client";
 import { UnlistenFn } from "@tauri-apps/api/event";
-import { appWindow } from "@tauri-apps/api/window";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { useLocalStorage } from "@mantine/hooks";
+const appWindow = getCurrentWebviewWindow()
 
 const App = () => {
     const [savedColorScheme, setSavedColorScheme] = useLocalStorage<ColorScheme | "system">({

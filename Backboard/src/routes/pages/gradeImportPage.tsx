@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { IconCheck } from "@tabler/icons-react";
 import { invoke } from "@tauri-apps/api";
 import { notifications } from "@mantine/notifications";
-import { open } from "@tauri-apps/api/dialog";
+import { open } from "@tauri-apps/plugin-dialog";
 import { preferencesStore } from "../../preferencesStore";
 import { useSecurityStore } from "../../stores/securityStore";
 import { useSettingStore } from "../../stores/settingsStore";

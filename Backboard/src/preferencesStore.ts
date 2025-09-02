@@ -1,5 +1,5 @@
 import { StateStorage } from "zustand/middleware";
-import { Store } from "tauri-plugin-store-api";
+import { Store } from "@tauri-apps/plugin-store";
 
 export const preferencesStore = new Store(".preferences.dat");
 

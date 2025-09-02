@@ -6,13 +6,13 @@ fn de_opt_string<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
 where
     D: serde::Deserializer<'de>,
 {
-    let data_type = calamine::DataType::deserialize(deserializer);
+    let data_type = calamine::Data::deserialize(deserializer);
     match data_type {
-        Ok(calamine::DataType::Error(_e)) => Ok(None),
-        Ok(calamine::DataType::Float(f)) => Ok(Some(f.to_string())),
-        Ok(calamine::DataType::Int(i)) => Ok(Some(i.to_string())),
-        Ok(calamine::DataType::String(s)) => Ok(Some(s)),
-        Ok(calamine::DataType::DateTime(d)) => Ok(Some(d.to_string())),
+        Ok(calamine::Data::Error(_e)) => Ok(None),
+        Ok(calamine::Data::Float(f)) => Ok(Some(f.to_string())),
+        Ok(calamine::Data::Int(i)) => Ok(Some(i.to_string())),
+        Ok(calamine::Data::String(s)) => Ok(Some(s)),
+        Ok(calamine::Data::DateTime(d)) => Ok(Some(d.to_string())),
         _ => Ok(None),
     }
 }
@@ -78,9 +78,7 @@ pub struct BackboardStudent {
 
 pub fn process_grades_excel_file(file_path: String) -> Result<Vec<BackboardGrade>, CalamineError> {
     let mut workbook: Xlsx<_> = open_workbook(file_path)?;
-    let range = workbook
-        .worksheet_range("Évközi jegyek")
-        .ok_or(CalamineError::Msg("Cannot find sheet: 'Évközi jegyek'"))??;
+    let range = workbook.worksheet_range("Évközi jegyek")?;
 
     let mut iter = RangeDeserializerBuilder::new()
         .from_range::<_, BackboardGrade>(&range)?
@@ -98,9 +96,7 @@ pub fn process_students_excel_file(
     students_file_path: String,
 ) -> Result<Vec<BackboardStudent>, CalamineError> {
     let mut workbook: Xlsx<_> = open_workbook(students_file_path)?;
-    let range = workbook
-        .worksheet_range("Munka1")
-        .ok_or(CalamineError::Msg("Cannot find sheet: 'Munka1'"))??;
+    let range = workbook.worksheet_range("Munka1")?;
 
     let mut iter = RangeDeserializerBuilder::new()
         .from_range::<_, BackboardStudent>(&range)?
