@@ -18,17 +18,18 @@ where
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct BackboardGrade {
-    #[serde(rename(deserialize = "Tárgy kategória", serialize = "SubjectCategory"))]
+    #[serde(rename(deserialize = "Tárgy kategória"))]
     subject_category: String,
-    #[serde(rename(deserialize = "Tantárgy", serialize = "Subject"))]
+    #[serde(rename(deserialize = "Tantárgy"))]
     subject: String,
-    #[serde(rename(deserialize = "Téma", serialize = "Theme"))]
+    #[serde(rename(deserialize = "Téma"))]
     theme: String,
-    #[serde(rename(deserialize = "Osztály/Csoport név", serialize = "Group"))]
+    #[serde(rename(deserialize = "Osztály/Csoport név"))]
     group: String,
     #[serde(
-        rename(deserialize = "Pedagógus név", serialize = "Teacher"),
+        rename(deserialize = "Pedagógus név"),
         deserialize_with = "de_opt_string",
         default
     )]
@@ -39,25 +40,25 @@ pub struct BackboardGrade {
         default
     )]
     grade_type: Option<String>,
-    #[serde(rename(deserialize = "Osztályzat", serialize = "TextGrade"))]
+    #[serde(rename(deserialize = "Osztályzat"))]
     text_grade: String,
     #[serde(
-        rename(deserialize = "Jegy", serialize = "Grade"),
+        rename(deserialize = "Jegy"),
         deserialize_with = "de_opt_string",
         default
     )]
     grade: Option<String>,
-    #[serde(rename(deserialize = "Szöveges értékelés", serialize = "ShortTextGrade"))]
+    #[serde(rename(deserialize = "Szöveges értékelés"))]
     short_text_grade: String,
-    #[serde(rename(deserialize = "Magatartás", serialize = "BehaviorGrade"))]
+    #[serde(rename(deserialize = "Magatartás"))]
     behavior_grade: String,
-    #[serde(rename(deserialize = "Szorgalom", serialize = "DiligenceGrade"))]
+    #[serde(rename(deserialize = "Szorgalom"))]
     diligence_grade: String,
-    #[serde(rename(deserialize = "Bejegyzés dátuma", serialize = "CreateDate"))]
+    #[serde(rename(deserialize = "Bejegyzés dátuma"))]
     create_date: String,
-    #[serde(rename(deserialize = "Rögzítés dátuma", serialize = "RecordDate"))]
+    #[serde(rename(deserialize = "Rögzítés dátuma"))]
     record_date: String,
-    #[serde(rename(deserialize = "Tanuló név", serialize = "StudentName"))]
+    #[serde(rename(deserialize = "Tanuló név"))]
     pub student_name: String,
     #[serde(rename(deserialize = "Tanuló azonosítója"), skip_serializing)]
     pub om_code: String,
@@ -114,12 +115,10 @@ pub fn process_students_excel_file(
 }
 
 #[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct BackboardUser {
-    #[serde(rename(serialize = "Id"))]
     id: String,
-    #[serde(rename(serialize = "PublicKey"))]
     public_key: String,
-    #[serde(rename(serialize = "OmCodeHashed"))]
     om_code_hashed: String,
 }
 
@@ -134,13 +133,10 @@ impl From<ImportIndexUsersResponse> for BackboardUser {
 }
 
 #[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct GradeCollection {
-    #[serde(rename(serialize = "Grades"))]
     pub grades: Vec<BackboardGrade>,
-    #[serde(rename(serialize = "SchoolClass"))]
     pub school_class: Option<String>,
-    #[serde(rename(serialize = "StudentName"))]
     pub student_name: String,
-    #[serde(rename(serialize = "User"))]
     pub user: BackboardUser,
 }
