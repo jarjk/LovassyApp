@@ -1,10 +1,10 @@
 use std::io::Write;
 
-use base64::{engine::general_purpose, Engine};
+use base64::{Engine, engine::general_purpose};
 use crypto_hash::{Algorithm, Hasher};
 use libaes::Cipher;
 use pbkdf2::pbkdf2_hmac_array;
-use pqc_kyber::{encapsulate, KyberError};
+use pqc_kyber::{KyberError, encapsulate};
 use rand::random;
 use sha2::Sha512;
 

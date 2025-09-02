@@ -1,5 +1,5 @@
 use api::models::ImportIndexUsersResponse;
-use calamine::{open_workbook, Error as CalamineError, RangeDeserializerBuilder, Reader, Xlsx};
+use calamine::{Error as CalamineError, RangeDeserializerBuilder, Reader, Xlsx, open_workbook};
 use serde::{Deserialize, Serialize};
 
 fn de_opt_string<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
