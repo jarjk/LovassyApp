@@ -20,12 +20,18 @@ where
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct BackboardGrade {
+    #[serde(rename(deserialize = "Tanuló név"))]
+    pub student_name: String,
+    #[serde(rename(deserialize = "Tanuló osztálya"), skip_serializing)]
+    pub school_class: Option<String>,
+    #[serde(rename(deserialize = "Születési idő"), skip_serializing)]
+    pub date_of_birth: Option<String>,
+    #[serde(rename(deserialize = "Tanuló azonosítója"), skip_serializing)]
+    pub om_code: String,
     #[serde(rename(deserialize = "Tárgy kategória"))]
     subject_category: String,
     #[serde(rename(deserialize = "Tantárgy"))]
     subject: String,
-    #[serde(rename(deserialize = "Téma"))]
-    theme: String,
     #[serde(rename(deserialize = "Osztály/Csoport név"))]
     group: String,
     #[serde(
@@ -34,6 +40,8 @@ pub struct BackboardGrade {
         default
     )]
     teacher: Option<String>,
+    #[serde(rename(deserialize = "Téma"))]
+    theme: String,
     #[serde(
         rename(deserialize = "Értékelés módja", serialize = "Type"),
         deserialize_with = "de_opt_string",
@@ -50,6 +58,8 @@ pub struct BackboardGrade {
     grade: Option<String>,
     #[serde(rename(deserialize = "Szöveges értékelés"))]
     short_text_grade: String,
+    #[serde(rename(deserialize = "Százalékos értékelés"))]
+    grade_percentage: String,
     #[serde(rename(deserialize = "Magatartás"))]
     behavior_grade: String,
     #[serde(rename(deserialize = "Szorgalom"))]
@@ -58,12 +68,8 @@ pub struct BackboardGrade {
     create_date: String,
     #[serde(rename(deserialize = "Rögzítés dátuma"))]
     record_date: String,
-    #[serde(rename(deserialize = "Tanuló név"))]
-    pub student_name: String,
-    #[serde(rename(deserialize = "Tanuló azonosítója"), skip_serializing)]
-    pub om_code: String,
-    #[serde(rename(deserialize = "Tanuló osztálya"), skip_serializing)]
-    pub school_class: Option<String>,
+    #[serde(rename(deserialize = "Utolsó rögzítés dátuma"))]
+    last_save_date: String,
 }
 
 #[derive(Debug, Clone, Deserialize)]
