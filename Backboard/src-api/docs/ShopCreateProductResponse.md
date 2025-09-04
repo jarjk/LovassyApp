@@ -15,7 +15,7 @@ Name | Type | Description | Notes
 **quantity** | Option<**i32**> |  | [optional]
 **user_limited** | Option<**bool**> |  | [optional]
 **user_limit** | Option<**i32**> |  | [optional]
-**inputs** | Option<[**Vec<crate::models::ShopCreateProductResponseInput>**](ShopCreateProductResponseInput.md)> |  | [optional]
+**inputs** | Option<[**Vec<models::ShopCreateProductResponseInput>**](ShopCreateProductResponseInput.md)> |  | [optional]
 **notified_emails** | Option<**Vec<String>**> |  | [optional]
 **thumbnail_url** | Option<**String**> |  | [optional]
 

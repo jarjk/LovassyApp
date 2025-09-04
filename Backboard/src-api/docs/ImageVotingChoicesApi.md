@@ -11,7 +11,7 @@ Method | HTTP request | Description
 
 ## api_image_voting_choices_get
 
-> Vec<crate::models::ImageVotingsIndexImageVotingChoicesResponse> api_image_voting_choices_get(filters, sorts, page, page_size)
+> Vec<models::ImageVotingsIndexImageVotingChoicesResponse> api_image_voting_choices_get(filters, sorts, page, page_size)
 Get a list of all image voting choices
 
 Requires verified email; Requires one of the following permissions: ImageVotings.IndexImageVotingChoices, ImageVotings.IndexActiveImageVotingChoices; Requires the following features to be enabled: ImageVotings
@@ -28,7 +28,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**Vec<crate::models::ImageVotingsIndexImageVotingChoicesResponse>**](ImageVotingsIndexImageVotingChoicesResponse.md)
+[**Vec<models::ImageVotingsIndexImageVotingChoicesResponse>**](ImageVotingsIndexImageVotingChoicesResponse.md)
 
 ### Authorization
 
@@ -44,7 +44,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_image_voting_choices_id_get
 
-> crate::models::ImageVotingsViewImageVotingChoiceResponse api_image_voting_choices_id_get(id)
+> models::ImageVotingsViewImageVotingChoiceResponse api_image_voting_choices_id_get(id)
 Get information about an image voting choice
 
 Requires verified email; Requires one of the following permissions: ImageVotings.ViewImageVotingChoice, ImageVotings.ViewActiveImageVotingChoice; Requires the following features to be enabled: ImageVotings
@@ -58,7 +58,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::ImageVotingsViewImageVotingChoiceResponse**](ImageVotingsViewImageVotingChoiceResponse.md)
+[**models::ImageVotingsViewImageVotingChoiceResponse**](ImageVotingsViewImageVotingChoiceResponse.md)
 
 ### Authorization
 

@@ -1,5 +1,5 @@
 import { Center, Divider, Group, Loader, Stack, Switch, Text, TextInput, Title } from "@mantine/core";
-import { disable, enable, isEnabled } from "tauri-plugin-autostart-api";
+import { disable, enable, isEnabled } from "@tauri-apps/plugin-autostart";
 import { useEffect, useState } from "react";
 
 import { preferencesStore } from "../../preferencesStore";

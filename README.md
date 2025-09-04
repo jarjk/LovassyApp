@@ -40,7 +40,7 @@ A publikus API dokumentáció az aktuális vezrióhoz elérhető [itt](https://b
 
 - **Blueboard**: A LovassyApp backend-je, [ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-7.0) keretrendszerben íródott.
 - **Boardlight**: A LovassyApp diákoknak szánt frontend-je, [React](https://react.dev/) keretrendszerben íródott.
-- **Backboard**: A LovassyApp iskolavezetőségnek szánt asztali frontend-je, [Tauri](https://tauri.studio/) és [React](https://react.dev/) keretrendszerben íródott.
+- **Backboard**: A LovassyApp iskolavezetőségnek szánt asztali frontend-je, [Tauri](https://tauri.app/) és [React](https://react.dev/) keretrendszerben íródott.
 
 ![LovassyAppDiagram.png](.github/LovassyAppDiagram.png)
 

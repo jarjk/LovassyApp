@@ -40,7 +40,7 @@ No authorization required
 
 ## api_status_service_status_get
 
-> crate::models::StatusViewServiceStatusResponse api_status_service_status_get()
+> models::StatusViewServiceStatusResponse api_status_service_status_get()
 Get information about the status of the application
 
 ### Parameters
@@ -49,7 +49,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**crate::models::StatusViewServiceStatusResponse**](StatusViewServiceStatusResponse.md)
+[**models::StatusViewServiceStatusResponse**](StatusViewServiceStatusResponse.md)
 
 ### Authorization
 
@@ -65,7 +65,7 @@ No authorization required
 
 ## api_status_version_get
 
-> crate::models::StatusViewVersionResponse api_status_version_get(send_ok, send_motd)
+> models::StatusViewVersionResponse api_status_version_get(send_ok, send_motd)
 Get information about the application version
 
 ### Parameters
@@ -78,7 +78,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::StatusViewVersionResponse**](StatusViewVersionResponse.md)
+[**models::StatusViewVersionResponse**](StatusViewVersionResponse.md)
 
 ### Authorization
 

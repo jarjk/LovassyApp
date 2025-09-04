@@ -10,7 +10,7 @@ Method | HTTP request | Description
 
 ## api_feed_items_get
 
-> Vec<crate::models::FeedIndexFeedItemsResponse> api_feed_items_get(filters, sorts, page, page_size)
+> Vec<models::FeedIndexFeedItemsResponse> api_feed_items_get(filters, sorts, page, page_size)
 Get a list of all feed items
 
 Requires verified email; Requires one of the following permissions: Feed.IndexFeedItems; Requires the following features to be enabled: Feed
@@ -27,7 +27,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**Vec<crate::models::FeedIndexFeedItemsResponse>**](FeedIndexFeedItemsResponse.md)
+[**Vec<models::FeedIndexFeedItemsResponse>**](FeedIndexFeedItemsResponse.md)
 
 ### Authorization
 

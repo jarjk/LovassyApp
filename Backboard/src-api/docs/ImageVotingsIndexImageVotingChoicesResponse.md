@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 **id** | Option<**i32**> |  | [optional]
 **aspect_key** | Option<**String**> |  | [optional]
 **image_voting_id** | Option<**i32**> |  | [optional]
-**image_voting_entry** | Option<[**crate::models::ImageVotingsIndexImageVotingChoicesResponseImageVotingEntry**](ImageVotingsIndexImageVotingChoicesResponseImageVotingEntry.md)> |  | [optional]
+**image_voting_entry** | Option<[**models::ImageVotingsIndexImageVotingChoicesResponseImageVotingEntry**](ImageVotingsIndexImageVotingChoicesResponseImageVotingEntry.md)> |  | [optional]
 **user_id** | Option<[**uuid::Uuid**](uuid::Uuid.md)> |  | [optional]
 **created_at** | Option<**String**> |  | [optional]
 **updated_at** | Option<**String**> |  | [optional]

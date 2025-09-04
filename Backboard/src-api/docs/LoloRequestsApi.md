@@ -16,7 +16,7 @@ Method | HTTP request | Description
 
 ## api_lolo_requests_get
 
-> Vec<crate::models::ShopIndexLoloRequestsResponse> api_lolo_requests_get(filters, sorts, page, page_size)
+> Vec<models::ShopIndexLoloRequestsResponse> api_lolo_requests_get(filters, sorts, page, page_size)
 Get a list of all lolo requests
 
 Requires verified email; Requires one of the following permissions: Shop.IndexLoloRequests; Requires the following features to be enabled: Shop
@@ -33,7 +33,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**Vec<crate::models::ShopIndexLoloRequestsResponse>**](ShopIndexLoloRequestsResponse.md)
+[**Vec<models::ShopIndexLoloRequestsResponse>**](ShopIndexLoloRequestsResponse.md)
 
 ### Authorization
 
@@ -79,7 +79,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_lolo_requests_id_get
 
-> crate::models::ShopViewLoloRequestResponse api_lolo_requests_id_get(id)
+> models::ShopViewLoloRequestResponse api_lolo_requests_id_get(id)
 Get information about a lolo request
 
 Requires verified email; Requires one of the following permissions: Shop.ViewLoloRequest; Requires the following features to be enabled: Shop
@@ -93,7 +93,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::ShopViewLoloRequestResponse**](ShopViewLoloRequestResponse.md)
+[**models::ShopViewLoloRequestResponse**](ShopViewLoloRequestResponse.md)
 
 ### Authorization
 
@@ -171,7 +171,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_lolo_requests_own_get
 
-> Vec<crate::models::ShopIndexOwnLoloRequestsResponse> api_lolo_requests_own_get(filters, sorts, page, page_size)
+> Vec<models::ShopIndexOwnLoloRequestsResponse> api_lolo_requests_own_get(filters, sorts, page, page_size)
 Get a list of the current user's lolo requests
 
 Requires verified email; Requires one of the following permissions: Shop.IndexOwnLoloRequests; Requires the following features to be enabled: Shop
@@ -188,7 +188,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**Vec<crate::models::ShopIndexOwnLoloRequestsResponse>**](ShopIndexOwnLoloRequestsResponse.md)
+[**Vec<models::ShopIndexOwnLoloRequestsResponse>**](ShopIndexOwnLoloRequestsResponse.md)
 
 ### Authorization
 
@@ -204,7 +204,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_lolo_requests_post
 
-> crate::models::ShopCreateLoloRequestResponse api_lolo_requests_post(lolo_requests_url, shop_create_lolo_request_request_body)
+> models::ShopCreateLoloRequestResponse api_lolo_requests_post(lolo_requests_url, shop_create_lolo_request_request_body)
 Create a new lolo request
 
 Requires verified email; Requires one of the following permissions: Shop.CreateLoloRequest; Requires the following features to be enabled: Shop
@@ -219,7 +219,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::ShopCreateLoloRequestResponse**](ShopCreateLoloRequestResponse.md)
+[**models::ShopCreateLoloRequestResponse**](ShopCreateLoloRequestResponse.md)
 
 ### Authorization
 

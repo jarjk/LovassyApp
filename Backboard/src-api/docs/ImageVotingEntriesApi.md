@@ -18,7 +18,7 @@ Method | HTTP request | Description
 
 ## api_image_voting_entries_get
 
-> Vec<crate::models::ImageVotingsIndexImageVotingEntriesResponse> api_image_voting_entries_get(filters, sorts, page, page_size)
+> Vec<models::ImageVotingsIndexImageVotingEntriesResponse> api_image_voting_entries_get(filters, sorts, page, page_size)
 Get a list of all image voting entries
 
 Requires verified email; Requires one of the following permissions: ImageVotings.IndexImageVotingEntries, ImageVotings.IndexActiveImageVotingEntries; Requires the following features to be enabled: ImageVotings
@@ -35,7 +35,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**Vec<crate::models::ImageVotingsIndexImageVotingEntriesResponse>**](ImageVotingsIndexImageVotingEntriesResponse.md)
+[**Vec<models::ImageVotingsIndexImageVotingEntriesResponse>**](ImageVotingsIndexImageVotingEntriesResponse.md)
 
 ### Authorization
 
@@ -143,7 +143,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_image_voting_entries_id_get
 
-> crate::models::ImageVotingsViewImageVotingEntryResponse api_image_voting_entries_id_get(id)
+> models::ImageVotingsViewImageVotingEntryResponse api_image_voting_entries_id_get(id)
 Get information about an image voting entry
 
 Requires verified email; Requires one of the following permissions: ImageVotings.ViewImageVotingEntry, ImageVotings.ViewActiveImageVotingEntry; Requires the following features to be enabled: ImageVotings
@@ -157,7 +157,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::ImageVotingsViewImageVotingEntryResponse**](ImageVotingsViewImageVotingEntryResponse.md)
+[**models::ImageVotingsViewImageVotingEntryResponse**](ImageVotingsViewImageVotingEntryResponse.md)
 
 ### Authorization
 
@@ -266,7 +266,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_image_voting_entries_post
 
-> crate::models::ImageVotingsCreateImageVotingEntryResponse api_image_voting_entries_post(image_votings_create_image_voting_entry_request_body)
+> models::ImageVotingsCreateImageVotingEntryResponse api_image_voting_entries_post(image_votings_create_image_voting_entry_request_body)
 Create an image voting entry
 
 Requires verified email; Requires one of the following permissions: ImageVotings.ChooseImageVotingEntry, ImageVotings.CreateActiveImageVotingEntry; Requires the following features to be enabled: ImageVotings
@@ -280,7 +280,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::ImageVotingsCreateImageVotingEntryResponse**](ImageVotingsCreateImageVotingEntryResponse.md)
+[**models::ImageVotingsCreateImageVotingEntryResponse**](ImageVotingsCreateImageVotingEntryResponse.md)
 
 ### Authorization
 

@@ -12,7 +12,7 @@ Method | HTTP request | Description
 
 ## api_image_voting_entry_images_get
 
-> Vec<crate::models::ImageVotingsIndexImageVotingEntryImagesResponse> api_image_voting_entry_images_get(image_voting_id, filters, sorts, page, page_size)
+> Vec<models::ImageVotingsIndexImageVotingEntryImagesResponse> api_image_voting_entry_images_get(image_voting_id, filters, sorts, page, page_size)
 List all images of an image voting
 
 Requires verified email; Requires one of the following permissions: ImageVotings.IndexOwnImageVotingEntryImages, ImageVotings.IndexImageVotingEntryImages
@@ -30,7 +30,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**Vec<crate::models::ImageVotingsIndexImageVotingEntryImagesResponse>**](ImageVotingsIndexImageVotingEntryImagesResponse.md)
+[**Vec<models::ImageVotingsIndexImageVotingEntryImagesResponse>**](ImageVotingsIndexImageVotingEntryImagesResponse.md)
 
 ### Authorization
 
@@ -76,7 +76,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_image_voting_entry_images_post
 
-> crate::models::ImageVotingsUploadImageVotingEntryImageResponse api_image_voting_entry_images_post(image_voting_id, file)
+> models::ImageVotingsUploadImageVotingEntryImageResponse api_image_voting_entry_images_post(image_voting_id, file)
 Upload an image to be used in an image voting entry
 
 Requires verified email; Requires one of the following permissions: ImageVotings.UploadActiveImageVotingEntryImage, ImageVotings.UploadImageVotingEntryImage
@@ -91,7 +91,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::ImageVotingsUploadImageVotingEntryImageResponse**](ImageVotingsUploadImageVotingEntryImageResponse.md)
+[**models::ImageVotingsUploadImageVotingEntryImageResponse**](ImageVotingsUploadImageVotingEntryImageResponse.md)
 
 ### Authorization
 

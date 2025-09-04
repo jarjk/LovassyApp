@@ -11,7 +11,7 @@ Method | HTTP request | Description
 
 ## api_lolo_request_created_notifiers_get
 
-> Vec<crate::models::ShopIndexLoloRequestCreatedNotifiersResponse> api_lolo_request_created_notifiers_get(filters, sorts, page, page_size)
+> Vec<models::ShopIndexLoloRequestCreatedNotifiersResponse> api_lolo_request_created_notifiers_get(filters, sorts, page, page_size)
 Get a list of all emails to notify when a lolo request is created
 
 Requires verified email; Requires one of the following permissions: Shop.IndexLoloRequestCreatedNotifiers; Requires the following features to be enabled: Shop
@@ -28,7 +28,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**Vec<crate::models::ShopIndexLoloRequestCreatedNotifiersResponse>**](ShopIndexLoloRequestCreatedNotifiersResponse.md)
+[**Vec<models::ShopIndexLoloRequestCreatedNotifiersResponse>**](ShopIndexLoloRequestCreatedNotifiersResponse.md)
 
 ### Authorization
 

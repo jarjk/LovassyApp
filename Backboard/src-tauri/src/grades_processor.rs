@@ -1,68 +1,75 @@
 use api::models::ImportIndexUsersResponse;
-use calamine::{open_workbook, Error as CalamineError, RangeDeserializerBuilder, Reader, Xlsx};
+use calamine::{Error as CalamineError, RangeDeserializerBuilder, Reader, Xlsx, open_workbook};
 use serde::{Deserialize, Serialize};
 
 fn de_opt_string<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
 where
     D: serde::Deserializer<'de>,
 {
-    let data_type = calamine::DataType::deserialize(deserializer);
+    let data_type = calamine::Data::deserialize(deserializer);
     match data_type {
-        Ok(calamine::DataType::Error(_e)) => Ok(None),
-        Ok(calamine::DataType::Float(f)) => Ok(Some(f.to_string())),
-        Ok(calamine::DataType::Int(i)) => Ok(Some(i.to_string())),
-        Ok(calamine::DataType::String(s)) => Ok(Some(s)),
-        Ok(calamine::DataType::DateTime(d)) => Ok(Some(d.to_string())),
+        Ok(calamine::Data::Error(_e)) => Ok(None),
+        Ok(calamine::Data::Float(f)) => Ok(Some(f.to_string())),
+        Ok(calamine::Data::Int(i)) => Ok(Some(i.to_string())),
+        Ok(calamine::Data::String(s)) => Ok(Some(s)),
+        Ok(calamine::Data::DateTime(d)) => Ok(Some(d.to_string())),
         _ => Ok(None),
     }
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct BackboardGrade {
-    #[serde(rename(deserialize = "Tárgy kategória", serialize = "SubjectCategory"))]
+    #[serde(rename(deserialize = "Tanuló név"))]
+    pub student_name: String,
+    #[serde(rename(deserialize = "Tanuló osztálya"), skip_serializing)]
+    pub school_class: Option<String>,
+    #[serde(rename(deserialize = "Születési idő"), skip_serializing)]
+    pub date_of_birth: Option<String>,
+    #[serde(rename(deserialize = "Tanuló azonosítója"), skip_serializing)]
+    pub om_code: String,
+    #[serde(rename(deserialize = "Tárgy kategória"))]
     subject_category: String,
-    #[serde(rename(deserialize = "Tantárgy", serialize = "Subject"))]
+    #[serde(rename(deserialize = "Tantárgy"))]
     subject: String,
-    #[serde(rename(deserialize = "Téma", serialize = "Theme"))]
-    theme: String,
-    #[serde(rename(deserialize = "Osztály/Csoport név", serialize = "Group"))]
+    #[serde(rename(deserialize = "Osztály/Csoport név"))]
     group: String,
     #[serde(
-        rename(deserialize = "Pedagógus név", serialize = "Teacher"),
+        rename(deserialize = "Pedagógus név"),
         deserialize_with = "de_opt_string",
         default
     )]
     teacher: Option<String>,
+    #[serde(rename(deserialize = "Téma"))]
+    theme: String,
     #[serde(
         rename(deserialize = "Értékelés módja", serialize = "Type"),
         deserialize_with = "de_opt_string",
         default
     )]
     grade_type: Option<String>,
-    #[serde(rename(deserialize = "Osztályzat", serialize = "TextGrade"))]
+    #[serde(rename(deserialize = "Osztályzat"))]
     text_grade: String,
     #[serde(
-        rename(deserialize = "Jegy", serialize = "Grade"),
+        rename(deserialize = "Jegy"),
         deserialize_with = "de_opt_string",
         default
     )]
     grade: Option<String>,
-    #[serde(rename(deserialize = "Szöveges értékelés", serialize = "ShortTextGrade"))]
+    #[serde(rename(deserialize = "Szöveges értékelés"))]
     short_text_grade: String,
-    #[serde(rename(deserialize = "Magatartás", serialize = "BehaviorGrade"))]
+    #[serde(rename(deserialize = "Százalékos értékelés"))]
+    grade_percentage: String,
+    #[serde(rename(deserialize = "Magatartás"))]
     behavior_grade: String,
-    #[serde(rename(deserialize = "Szorgalom", serialize = "DiligenceGrade"))]
+    #[serde(rename(deserialize = "Szorgalom"))]
     diligence_grade: String,
-    #[serde(rename(deserialize = "Bejegyzés dátuma", serialize = "CreateDate"))]
+    #[serde(rename(deserialize = "Bejegyzés dátuma"))]
     create_date: String,
-    #[serde(rename(deserialize = "Rögzítés dátuma", serialize = "RecordDate"))]
+    #[serde(rename(deserialize = "Rögzítés dátuma"))]
     record_date: String,
-    #[serde(rename(deserialize = "Tanuló név", serialize = "StudentName"))]
-    pub student_name: String,
-    #[serde(rename(deserialize = "Tanuló azonosítója"), skip_serializing)]
-    pub om_code: String,
-    #[serde(rename(deserialize = "Tanuló osztálya"), skip_serializing)]
-    pub school_class: Option<String>,
+    #[serde(rename(deserialize = "Utolsó rögzítés dátuma"))]
+    last_save_date: String,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -77,9 +84,7 @@ pub struct BackboardStudent {
 
 pub fn process_grades_excel_file(file_path: String) -> Result<Vec<BackboardGrade>, CalamineError> {
     let mut workbook: Xlsx<_> = open_workbook(file_path)?;
-    let range = workbook
-        .worksheet_range("Évközi jegyek")
-        .ok_or(CalamineError::Msg("Cannot find sheet: 'Évközi jegyek'"))??;
+    let range = workbook.worksheet_range("Évközi jegyek")?;
 
     let mut iter = RangeDeserializerBuilder::new()
         .from_range::<_, BackboardGrade>(&range)?
@@ -97,9 +102,7 @@ pub fn process_students_excel_file(
     students_file_path: String,
 ) -> Result<Vec<BackboardStudent>, CalamineError> {
     let mut workbook: Xlsx<_> = open_workbook(students_file_path)?;
-    let range = workbook
-        .worksheet_range("Munka1")
-        .ok_or(CalamineError::Msg("Cannot find sheet: 'Munka1'"))??;
+    let range = workbook.worksheet_range("Munka1")?;
 
     let mut iter = RangeDeserializerBuilder::new()
         .from_range::<_, BackboardStudent>(&range)?
@@ -114,12 +117,10 @@ pub fn process_students_excel_file(
 }
 
 #[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct BackboardUser {
-    #[serde(rename(serialize = "Id"))]
     id: String,
-    #[serde(rename(serialize = "PublicKey"))]
     public_key: String,
-    #[serde(rename(serialize = "OmCodeHashed"))]
     om_code_hashed: String,
 }
 
@@ -134,13 +135,10 @@ impl From<ImportIndexUsersResponse> for BackboardUser {
 }
 
 #[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct GradeCollection {
-    #[serde(rename(serialize = "Grades"))]
     pub grades: Vec<BackboardGrade>,
-    #[serde(rename(serialize = "SchoolClass"))]
     pub school_class: Option<String>,
-    #[serde(rename(serialize = "StudentName"))]
     pub student_name: String,
-    #[serde(rename(serialize = "User"))]
     pub user: BackboardUser,
 }

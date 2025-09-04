@@ -10,9 +10,9 @@
 
 
 use reqwest;
-
-use crate::apis::ResponseContent;
-use super::{Error, configuration};
+use serde::{Deserialize, Serialize, de::Error as _};
+use crate::{apis::ResponseContent, models};
+use super::{Error, configuration, ContentType};
 
 
 /// struct for typed errors of method [`api_auth_control_get`]
@@ -60,8 +60,8 @@ pub enum ApiAuthResendVerifyEmailPostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ApiAuthResetPasswordPostError {
-    Status404(crate::models::ProblemDetails),
-    Status400(crate::models::ProblemDetails),
+    Status404(models::ProblemDetails),
+    Status400(models::ProblemDetails),
     Status503(),
     UnknownValue(serde_json::Value),
 }
@@ -77,260 +77,277 @@ pub enum ApiAuthSendPasswordResetPostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ApiAuthVerifyEmailPostError {
-    Status404(crate::models::ProblemDetails),
-    Status400(crate::models::ProblemDetails),
+    Status404(models::ProblemDetails),
+    Status400(models::ProblemDetails),
     UnknownValue(serde_json::Value),
 }
 
 
 /// Requires one of the following permissions: Auth.Control
-pub async fn api_auth_control_get(configuration: &configuration::Configuration, ) -> Result<crate::models::AuthViewControlResponse, Error<ApiAuthControlGetError>> {
-    let local_var_configuration = configuration;
+pub async fn api_auth_control_get(configuration: &configuration::Configuration, ) -> Result<models::AuthViewControlResponse, Error<ApiAuthControlGetError>> {
 
-    let local_var_client = &local_var_configuration.client;
+    let uri_str = format!("{}/Api/Auth/Control", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
 
-    let local_var_uri_str = format!("{}/Api/Auth/Control", local_var_configuration.base_path);
-    let mut local_var_req_builder = local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
-    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
-        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
     };
 
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
 
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
 
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::AuthViewControlResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::AuthViewControlResponse`")))),
+        }
     } else {
-        let local_var_entity: Option<ApiAuthControlGetError> = serde_json::from_str(&local_var_content).ok();
-        let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
-        Err(Error::ResponseError(local_var_error))
+        let content = resp.text().await?;
+        let entity: Option<ApiAuthControlGetError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }
 
-pub async fn api_auth_login_post(configuration: &configuration::Configuration, auth_login_request_body: Option<crate::models::AuthLoginRequestBody>) -> Result<crate::models::AuthLoginResponse, Error<ApiAuthLoginPostError>> {
-    let local_var_configuration = configuration;
+pub async fn api_auth_login_post(configuration: &configuration::Configuration, auth_login_request_body: Option<models::AuthLoginRequestBody>) -> Result<models::AuthLoginResponse, Error<ApiAuthLoginPostError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_body_auth_login_request_body = auth_login_request_body;
 
-    let local_var_client = &local_var_configuration.client;
+    let uri_str = format!("{}/Api/Auth/Login", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
-    let local_var_uri_str = format!("{}/Api/Auth/Login", local_var_configuration.base_path);
-    let mut local_var_req_builder = local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
-    local_var_req_builder = local_var_req_builder.json(&auth_login_request_body);
+    req_builder = req_builder.json(&p_body_auth_login_request_body);
 
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
 
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
 
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::AuthLoginResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::AuthLoginResponse`")))),
+        }
     } else {
-        let local_var_entity: Option<ApiAuthLoginPostError> = serde_json::from_str(&local_var_content).ok();
-        let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
-        Err(Error::ResponseError(local_var_error))
+        let content = resp.text().await?;
+        let entity: Option<ApiAuthLoginPostError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }
 
 pub async fn api_auth_logout_delete(configuration: &configuration::Configuration, ) -> Result<(), Error<ApiAuthLogoutDeleteError>> {
-    let local_var_configuration = configuration;
 
-    let local_var_client = &local_var_configuration.client;
+    let uri_str = format!("{}/Api/Auth/Logout", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::DELETE, &uri_str);
 
-    let local_var_uri_str = format!("{}/Api/Auth/Logout", local_var_configuration.base_path);
-    let mut local_var_req_builder = local_var_client.request(reqwest::Method::DELETE, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
-    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
-        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
     };
 
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
 
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
+    let status = resp.status();
 
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+    if !status.is_client_error() && !status.is_server_error() {
         Ok(())
     } else {
-        let local_var_entity: Option<ApiAuthLogoutDeleteError> = serde_json::from_str(&local_var_content).ok();
-        let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
-        Err(Error::ResponseError(local_var_error))
+        let content = resp.text().await?;
+        let entity: Option<ApiAuthLogoutDeleteError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }
 
-pub async fn api_auth_refresh_post(configuration: &configuration::Configuration, token: Option<&str>) -> Result<crate::models::AuthRefreshResponse, Error<ApiAuthRefreshPostError>> {
-    let local_var_configuration = configuration;
+pub async fn api_auth_refresh_post(configuration: &configuration::Configuration, token: Option<&str>) -> Result<models::AuthRefreshResponse, Error<ApiAuthRefreshPostError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_query_token = token;
 
-    let local_var_client = &local_var_configuration.client;
+    let uri_str = format!("{}/Api/Auth/Refresh", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
-    let local_var_uri_str = format!("{}/Api/Auth/Refresh", local_var_configuration.base_path);
-    let mut local_var_req_builder = local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_str) = token {
-        local_var_req_builder = local_var_req_builder.query(&[("token", &local_var_str.to_string())]);
+    if let Some(ref param_value) = p_query_token {
+        req_builder = req_builder.query(&[("token", &param_value.to_string())]);
     }
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
 
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
 
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
 
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `models::AuthRefreshResponse`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `models::AuthRefreshResponse`")))),
+        }
     } else {
-        let local_var_entity: Option<ApiAuthRefreshPostError> = serde_json::from_str(&local_var_content).ok();
-        let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
-        Err(Error::ResponseError(local_var_error))
+        let content = resp.text().await?;
+        let entity: Option<ApiAuthRefreshPostError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }
 
 /// Requires unverified email
 pub async fn api_auth_resend_verify_email_post(configuration: &configuration::Configuration, verify_url: Option<&str>, verify_token_query_key: Option<&str>) -> Result<(), Error<ApiAuthResendVerifyEmailPostError>> {
-    let local_var_configuration = configuration;
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_query_verify_url = verify_url;
+    let p_query_verify_token_query_key = verify_token_query_key;
 
-    let local_var_client = &local_var_configuration.client;
+    let uri_str = format!("{}/Api/Auth/ResendVerifyEmail", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
-    let local_var_uri_str = format!("{}/Api/Auth/ResendVerifyEmail", local_var_configuration.base_path);
-    let mut local_var_req_builder = local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_str) = verify_url {
-        local_var_req_builder = local_var_req_builder.query(&[("verifyUrl", &local_var_str.to_string())]);
+    if let Some(ref param_value) = p_query_verify_url {
+        req_builder = req_builder.query(&[("verifyUrl", &param_value.to_string())]);
     }
-    if let Some(ref local_var_str) = verify_token_query_key {
-        local_var_req_builder = local_var_req_builder.query(&[("verifyTokenQueryKey", &local_var_str.to_string())]);
+    if let Some(ref param_value) = p_query_verify_token_query_key {
+        req_builder = req_builder.query(&[("verifyTokenQueryKey", &param_value.to_string())]);
     }
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
-    if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
-        local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+    if let Some(ref token) = configuration.bearer_access_token {
+        req_builder = req_builder.bearer_auth(token.to_owned());
     };
 
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
 
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
+    let status = resp.status();
 
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+    if !status.is_client_error() && !status.is_server_error() {
         Ok(())
     } else {
-        let local_var_entity: Option<ApiAuthResendVerifyEmailPostError> = serde_json::from_str(&local_var_content).ok();
-        let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
-        Err(Error::ResponseError(local_var_error))
+        let content = resp.text().await?;
+        let entity: Option<ApiAuthResendVerifyEmailPostError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }
 
-pub async fn api_auth_reset_password_post(configuration: &configuration::Configuration, password_reset_token: Option<&str>, auth_reset_password_request_body: Option<crate::models::AuthResetPasswordRequestBody>) -> Result<(), Error<ApiAuthResetPasswordPostError>> {
-    let local_var_configuration = configuration;
+pub async fn api_auth_reset_password_post(configuration: &configuration::Configuration, password_reset_token: Option<&str>, auth_reset_password_request_body: Option<models::AuthResetPasswordRequestBody>) -> Result<(), Error<ApiAuthResetPasswordPostError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_query_password_reset_token = password_reset_token;
+    let p_body_auth_reset_password_request_body = auth_reset_password_request_body;
 
-    let local_var_client = &local_var_configuration.client;
+    let uri_str = format!("{}/Api/Auth/ResetPassword", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
-    let local_var_uri_str = format!("{}/Api/Auth/ResetPassword", local_var_configuration.base_path);
-    let mut local_var_req_builder = local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_str) = password_reset_token {
-        local_var_req_builder = local_var_req_builder.query(&[("passwordResetToken", &local_var_str.to_string())]);
+    if let Some(ref param_value) = p_query_password_reset_token {
+        req_builder = req_builder.query(&[("passwordResetToken", &param_value.to_string())]);
     }
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
-    local_var_req_builder = local_var_req_builder.json(&auth_reset_password_request_body);
+    req_builder = req_builder.json(&p_body_auth_reset_password_request_body);
 
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
 
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
+    let status = resp.status();
 
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+    if !status.is_client_error() && !status.is_server_error() {
         Ok(())
     } else {
-        let local_var_entity: Option<ApiAuthResetPasswordPostError> = serde_json::from_str(&local_var_content).ok();
-        let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
-        Err(Error::ResponseError(local_var_error))
+        let content = resp.text().await?;
+        let entity: Option<ApiAuthResetPasswordPostError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }
 
-pub async fn api_auth_send_password_reset_post(configuration: &configuration::Configuration, password_reset_url: Option<&str>, password_reset_token_query_key: Option<&str>, auth_send_password_reset_request_body: Option<crate::models::AuthSendPasswordResetRequestBody>) -> Result<(), Error<ApiAuthSendPasswordResetPostError>> {
-    let local_var_configuration = configuration;
+pub async fn api_auth_send_password_reset_post(configuration: &configuration::Configuration, password_reset_url: Option<&str>, password_reset_token_query_key: Option<&str>, auth_send_password_reset_request_body: Option<models::AuthSendPasswordResetRequestBody>) -> Result<(), Error<ApiAuthSendPasswordResetPostError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_query_password_reset_url = password_reset_url;
+    let p_query_password_reset_token_query_key = password_reset_token_query_key;
+    let p_body_auth_send_password_reset_request_body = auth_send_password_reset_request_body;
 
-    let local_var_client = &local_var_configuration.client;
+    let uri_str = format!("{}/Api/Auth/SendPasswordReset", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
-    let local_var_uri_str = format!("{}/Api/Auth/SendPasswordReset", local_var_configuration.base_path);
-    let mut local_var_req_builder = local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_str) = password_reset_url {
-        local_var_req_builder = local_var_req_builder.query(&[("passwordResetUrl", &local_var_str.to_string())]);
+    if let Some(ref param_value) = p_query_password_reset_url {
+        req_builder = req_builder.query(&[("passwordResetUrl", &param_value.to_string())]);
     }
-    if let Some(ref local_var_str) = password_reset_token_query_key {
-        local_var_req_builder = local_var_req_builder.query(&[("passwordResetTokenQueryKey", &local_var_str.to_string())]);
+    if let Some(ref param_value) = p_query_password_reset_token_query_key {
+        req_builder = req_builder.query(&[("passwordResetTokenQueryKey", &param_value.to_string())]);
     }
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
-    local_var_req_builder = local_var_req_builder.json(&auth_send_password_reset_request_body);
+    req_builder = req_builder.json(&p_body_auth_send_password_reset_request_body);
 
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
 
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
+    let status = resp.status();
 
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+    if !status.is_client_error() && !status.is_server_error() {
         Ok(())
     } else {
-        let local_var_entity: Option<ApiAuthSendPasswordResetPostError> = serde_json::from_str(&local_var_content).ok();
-        let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
-        Err(Error::ResponseError(local_var_error))
+        let content = resp.text().await?;
+        let entity: Option<ApiAuthSendPasswordResetPostError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }
 
 pub async fn api_auth_verify_email_post(configuration: &configuration::Configuration, verify_token: Option<&str>) -> Result<(), Error<ApiAuthVerifyEmailPostError>> {
-    let local_var_configuration = configuration;
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_query_verify_token = verify_token;
 
-    let local_var_client = &local_var_configuration.client;
+    let uri_str = format!("{}/Api/Auth/VerifyEmail", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
-    let local_var_uri_str = format!("{}/Api/Auth/VerifyEmail", local_var_configuration.base_path);
-    let mut local_var_req_builder = local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_str) = verify_token {
-        local_var_req_builder = local_var_req_builder.query(&[("verifyToken", &local_var_str.to_string())]);
+    if let Some(ref param_value) = p_query_verify_token {
+        req_builder = req_builder.query(&[("verifyToken", &param_value.to_string())]);
     }
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
 
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
 
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
+    let status = resp.status();
 
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+    if !status.is_client_error() && !status.is_server_error() {
         Ok(())
     } else {
-        let local_var_entity: Option<ApiAuthVerifyEmailPostError> = serde_json::from_str(&local_var_content).ok();
-        let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
-        Err(Error::ResponseError(local_var_error))
+        let content = resp.text().await?;
+        let entity: Option<ApiAuthVerifyEmailPostError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }
 

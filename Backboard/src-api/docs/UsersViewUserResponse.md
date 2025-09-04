@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **real_name** | Option<**String**> |  | [optional]
 **class** | Option<**String**> |  | [optional]
 **last_online_at** | Option<**String**> |  | [optional]
-**user_groups** | Option<[**Vec<crate::models::UsersViewUserResponseUserGroup>**](UsersViewUserResponseUserGroup.md)> |  | [optional]
+**user_groups** | Option<[**Vec<models::UsersViewUserResponseUserGroup>**](UsersViewUserResponseUserGroup.md)> |  | [optional]
 **created_at** | Option<**String**> |  | [optional]
 **updated_at** | Option<**String**> |  | [optional]
 

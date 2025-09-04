@@ -10,7 +10,7 @@ Method | HTTP request | Description
 
 ## api_permissions_get
 
-> Vec<crate::models::AuthIndexPermissionsResponse> api_permissions_get(filters, sorts, page, page_size)
+> Vec<models::AuthIndexPermissionsResponse> api_permissions_get(filters, sorts, page, page_size)
 Get a list of all permissions
 
 Requires verified email; Requires one of the following permissions: Auth.IndexPermissions
@@ -27,7 +27,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**Vec<crate::models::AuthIndexPermissionsResponse>**](AuthIndexPermissionsResponse.md)
+[**Vec<models::AuthIndexPermissionsResponse>**](AuthIndexPermissionsResponse.md)
 
 ### Authorization
 

@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 **email_verified_at** | Option<**String**> |  | [optional]
 **real_name** | Option<**String**> |  | [optional]
 **class** | Option<**String**> |  | [optional]
-**user_groups** | Option<[**Vec<crate::models::UsersIndexUsersResponseUserGroup>**](UsersIndexUsersResponseUserGroup.md)> |  | [optional]
+**user_groups** | Option<[**Vec<models::UsersIndexUsersResponseUserGroup>**](UsersIndexUsersResponseUserGroup.md)> |  | [optional]
 **created_at** | Option<**String**> |  | [optional]
 **updated_at** | Option<**String**> |  | [optional]
 

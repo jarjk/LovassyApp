@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**user** | Option<[**crate::models::AuthLoginResponseUser**](AuthLoginResponseUser.md)> |  | [optional]
+**user** | Option<[**models::AuthLoginResponseUser**](AuthLoginResponseUser.md)> |  | [optional]
 **token** | Option<**String**> |  | [optional]
 **refresh_token** | Option<**String**> |  | [optional]
 **refresh_token_expiration** | Option<**String**> |  | [optional]

@@ -1,11 +1,11 @@
 use std::io::Write;
 
-use base64::{engine::general_purpose, Engine};
+use base64::{Engine, engine::general_purpose};
 use crypto_hash::{Algorithm, Hasher};
 use libaes::Cipher;
 use pbkdf2::pbkdf2_hmac_array;
-use pqc_kyber::{encapsulate, KyberError};
-use rand::{random, thread_rng};
+use pqc_kyber::{KyberError, encapsulate};
+use rand::random;
 use sha2::Sha512;
 
 pub fn generate_salt() -> String {
@@ -33,7 +33,7 @@ pub fn aes_encrypt(data: String, key: String) -> String {
 pub fn kyber_encrypt(data: String, public_key: String) -> Result<String, KyberError> {
     let public_key_bytes = general_purpose::STANDARD.decode(public_key).unwrap();
 
-    let mut rng = thread_rng();
+    let mut rng = rand::thread_rng();
 
     let (encapsulation, secret) = encapsulate(&public_key_bytes, &mut rng)?;
 

@@ -10,16 +10,16 @@
 
 
 use reqwest;
-
-use crate::apis::ResponseContent;
-use super::{Error, configuration};
+use serde::{Deserialize, Serialize, de::Error as _};
+use crate::{apis::ResponseContent, models};
+use super::{Error, configuration, ContentType};
 
 
 /// struct for typed errors of method [`api_import_grades_user_id_post`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ApiImportGradesUserIdPostError {
-    Status404(crate::models::ProblemDetails),
+    Status404(models::ProblemDetails),
     Status401(),
     Status403(),
     UnknownValue(serde_json::Value),
@@ -45,124 +45,133 @@ pub enum ApiImportUsersGetError {
 
 
 /// Requires the following features to be enabled: Import
-pub async fn api_import_grades_user_id_post(configuration: &configuration::Configuration, user_id: &str, import_import_grades_request_body: Option<crate::models::ImportImportGradesRequestBody>) -> Result<(), Error<ApiImportGradesUserIdPostError>> {
-    let local_var_configuration = configuration;
+pub async fn api_import_grades_user_id_post(configuration: &configuration::Configuration, user_id: &str, import_import_grades_request_body: Option<models::ImportImportGradesRequestBody>) -> Result<(), Error<ApiImportGradesUserIdPostError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_path_user_id = user_id;
+    let p_body_import_import_grades_request_body = import_import_grades_request_body;
 
-    let local_var_client = &local_var_configuration.client;
+    let uri_str = format!("{}/Api/Import/Grades/{userId}", configuration.base_path, userId=crate::apis::urlencode(p_path_user_id));
+    let mut req_builder = configuration.client.request(reqwest::Method::POST, &uri_str);
 
-    let local_var_uri_str = format!("{}/Api/Import/Grades/{userId}", local_var_configuration.base_path, userId=crate::apis::urlencode(user_id));
-    let mut local_var_req_builder = local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
-    if let Some(ref local_var_apikey) = local_var_configuration.api_key {
-        let local_var_key = local_var_apikey.key.clone();
-        let local_var_value = match local_var_apikey.prefix {
-            Some(ref local_var_prefix) => format!("{} {}", local_var_prefix, local_var_key),
-            None => local_var_key,
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
         };
-        local_var_req_builder = local_var_req_builder.header("X-Authorization", local_var_value);
+        req_builder = req_builder.header("X-Authorization", value);
     };
-    local_var_req_builder = local_var_req_builder.json(&import_import_grades_request_body);
+    req_builder = req_builder.json(&p_body_import_import_grades_request_body);
 
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
 
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
+    let status = resp.status();
 
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+    if !status.is_client_error() && !status.is_server_error() {
         Ok(())
     } else {
-        let local_var_entity: Option<ApiImportGradesUserIdPostError> = serde_json::from_str(&local_var_content).ok();
-        let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
-        Err(Error::ResponseError(local_var_error))
+        let content = resp.text().await?;
+        let entity: Option<ApiImportGradesUserIdPostError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }
 
 /// Requires the following features to be enabled: Import
-pub async fn api_import_reset_key_password_put(configuration: &configuration::Configuration, import_update_reset_key_password_request_body: Option<crate::models::ImportUpdateResetKeyPasswordRequestBody>) -> Result<(), Error<ApiImportResetKeyPasswordPutError>> {
-    let local_var_configuration = configuration;
+pub async fn api_import_reset_key_password_put(configuration: &configuration::Configuration, import_update_reset_key_password_request_body: Option<models::ImportUpdateResetKeyPasswordRequestBody>) -> Result<(), Error<ApiImportResetKeyPasswordPutError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_body_import_update_reset_key_password_request_body = import_update_reset_key_password_request_body;
 
-    let local_var_client = &local_var_configuration.client;
+    let uri_str = format!("{}/Api/Import/ResetKeyPassword", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::PUT, &uri_str);
 
-    let local_var_uri_str = format!("{}/Api/Import/ResetKeyPassword", local_var_configuration.base_path);
-    let mut local_var_req_builder = local_var_client.request(reqwest::Method::PUT, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
-    if let Some(ref local_var_apikey) = local_var_configuration.api_key {
-        let local_var_key = local_var_apikey.key.clone();
-        let local_var_value = match local_var_apikey.prefix {
-            Some(ref local_var_prefix) => format!("{} {}", local_var_prefix, local_var_key),
-            None => local_var_key,
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
         };
-        local_var_req_builder = local_var_req_builder.header("X-Authorization", local_var_value);
+        req_builder = req_builder.header("X-Authorization", value);
     };
-    local_var_req_builder = local_var_req_builder.json(&import_update_reset_key_password_request_body);
+    req_builder = req_builder.json(&p_body_import_update_reset_key_password_request_body);
 
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
 
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
+    let status = resp.status();
 
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+    if !status.is_client_error() && !status.is_server_error() {
         Ok(())
     } else {
-        let local_var_entity: Option<ApiImportResetKeyPasswordPutError> = serde_json::from_str(&local_var_content).ok();
-        let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
-        Err(Error::ResponseError(local_var_error))
+        let content = resp.text().await?;
+        let entity: Option<ApiImportResetKeyPasswordPutError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }
 
 /// Requires the following features to be enabled: Import
-pub async fn api_import_users_get(configuration: &configuration::Configuration, filters: Option<&str>, sorts: Option<&str>, page: Option<i32>, page_size: Option<i32>) -> Result<Vec<crate::models::ImportIndexUsersResponse>, Error<ApiImportUsersGetError>> {
-    let local_var_configuration = configuration;
+pub async fn api_import_users_get(configuration: &configuration::Configuration, filters: Option<&str>, sorts: Option<&str>, page: Option<i32>, page_size: Option<i32>) -> Result<Vec<models::ImportIndexUsersResponse>, Error<ApiImportUsersGetError>> {
+    // add a prefix to parameters to efficiently prevent name collisions
+    let p_query_filters = filters;
+    let p_query_sorts = sorts;
+    let p_query_page = page;
+    let p_query_page_size = page_size;
 
-    let local_var_client = &local_var_configuration.client;
+    let uri_str = format!("{}/Api/Import/Users", configuration.base_path);
+    let mut req_builder = configuration.client.request(reqwest::Method::GET, &uri_str);
 
-    let local_var_uri_str = format!("{}/Api/Import/Users", local_var_configuration.base_path);
-    let mut local_var_req_builder = local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
-
-    if let Some(ref local_var_str) = filters {
-        local_var_req_builder = local_var_req_builder.query(&[("Filters", &local_var_str.to_string())]);
+    if let Some(ref param_value) = p_query_filters {
+        req_builder = req_builder.query(&[("Filters", &param_value.to_string())]);
     }
-    if let Some(ref local_var_str) = sorts {
-        local_var_req_builder = local_var_req_builder.query(&[("Sorts", &local_var_str.to_string())]);
+    if let Some(ref param_value) = p_query_sorts {
+        req_builder = req_builder.query(&[("Sorts", &param_value.to_string())]);
     }
-    if let Some(ref local_var_str) = page {
-        local_var_req_builder = local_var_req_builder.query(&[("Page", &local_var_str.to_string())]);
+    if let Some(ref param_value) = p_query_page {
+        req_builder = req_builder.query(&[("Page", &param_value.to_string())]);
     }
-    if let Some(ref local_var_str) = page_size {
-        local_var_req_builder = local_var_req_builder.query(&[("PageSize", &local_var_str.to_string())]);
+    if let Some(ref param_value) = p_query_page_size {
+        req_builder = req_builder.query(&[("PageSize", &param_value.to_string())]);
     }
-    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
-        local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    if let Some(ref user_agent) = configuration.user_agent {
+        req_builder = req_builder.header(reqwest::header::USER_AGENT, user_agent.clone());
     }
-    if let Some(ref local_var_apikey) = local_var_configuration.api_key {
-        let local_var_key = local_var_apikey.key.clone();
-        let local_var_value = match local_var_apikey.prefix {
-            Some(ref local_var_prefix) => format!("{} {}", local_var_prefix, local_var_key),
-            None => local_var_key,
+    if let Some(ref apikey) = configuration.api_key {
+        let key = apikey.key.clone();
+        let value = match apikey.prefix {
+            Some(ref prefix) => format!("{} {}", prefix, key),
+            None => key,
         };
-        local_var_req_builder = local_var_req_builder.header("X-Authorization", local_var_value);
+        req_builder = req_builder.header("X-Authorization", value);
     };
 
-    let local_var_req = local_var_req_builder.build()?;
-    let local_var_resp = local_var_client.execute(local_var_req).await?;
+    let req = req_builder.build()?;
+    let resp = configuration.client.execute(req).await?;
 
-    let local_var_status = local_var_resp.status();
-    let local_var_content = local_var_resp.text().await?;
+    let status = resp.status();
+    let content_type = resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("application/octet-stream");
+    let content_type = super::ContentType::from(content_type);
 
-    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+    if !status.is_client_error() && !status.is_server_error() {
+        let content = resp.text().await?;
+        match content_type {
+            ContentType::Json => serde_json::from_str(&content).map_err(Error::from),
+            ContentType::Text => return Err(Error::from(serde_json::Error::custom("Received `text/plain` content type response that cannot be converted to `Vec&lt;models::ImportIndexUsersResponse&gt;`"))),
+            ContentType::Unsupported(unknown_type) => return Err(Error::from(serde_json::Error::custom(format!("Received `{unknown_type}` content type response that cannot be converted to `Vec&lt;models::ImportIndexUsersResponse&gt;`")))),
+        }
     } else {
-        let local_var_entity: Option<ApiImportUsersGetError> = serde_json::from_str(&local_var_content).ok();
-        let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
-        Err(Error::ResponseError(local_var_error))
+        let content = resp.text().await?;
+        let entity: Option<ApiImportUsersGetError> = serde_json::from_str(&content).ok();
+        Err(Error::ResponseError(ResponseContent { status, content, entity }))
     }
 }
 

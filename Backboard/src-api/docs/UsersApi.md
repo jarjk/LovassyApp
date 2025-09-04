@@ -16,7 +16,7 @@ Method | HTTP request | Description
 
 ## api_users_get
 
-> Vec<crate::models::UsersIndexUsersResponse> api_users_get(filters, sorts, page, page_size)
+> Vec<models::UsersIndexUsersResponse> api_users_get(filters, sorts, page, page_size)
 Get a list of all users
 
 Requires verified email; Requires one of the following permissions: Users.IndexUsers; Requires the following features to be enabled: Users
@@ -33,7 +33,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**Vec<crate::models::UsersIndexUsersResponse>**](UsersIndexUsersResponse.md)
+[**Vec<models::UsersIndexUsersResponse>**](UsersIndexUsersResponse.md)
 
 ### Authorization
 
@@ -79,7 +79,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_users_id_get
 
-> crate::models::UsersViewUserResponse api_users_id_get(id)
+> models::UsersViewUserResponse api_users_id_get(id)
 Get information about a user
 
 Requires verified email; Requires one of the following permissions: Users.ViewUser; Requires the following features to be enabled: Users
@@ -93,7 +93,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::UsersViewUserResponse**](UsersViewUserResponse.md)
+[**models::UsersViewUserResponse**](UsersViewUserResponse.md)
 
 ### Authorization
 

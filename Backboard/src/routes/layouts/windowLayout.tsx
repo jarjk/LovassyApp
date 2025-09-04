@@ -3,8 +3,9 @@ import { IconDatabaseImport, IconKey, IconMinus, IconSatellite, IconSettings, Ic
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { ColorSchemeToggle } from "../../components/colorSchemeToggle";
-import { appWindow } from "@tauri-apps/api/window";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { useState } from "react";
+const appWindow = getCurrentWebviewWindow()
 
 const useStyles = createStyles((theme) => ({
     windowHeader: {

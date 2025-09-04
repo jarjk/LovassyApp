@@ -73,7 +73,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_import_users_get
 
-> Vec<crate::models::ImportIndexUsersResponse> api_import_users_get(filters, sorts, page, page_size)
+> Vec<models::ImportIndexUsersResponse> api_import_users_get(filters, sorts, page, page_size)
 Get a list of all users for grade importing
 
 Requires the following features to be enabled: Import
@@ -90,7 +90,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**Vec<crate::models::ImportIndexUsersResponse>**](ImportIndexUsersResponse.md)
+[**Vec<models::ImportIndexUsersResponse>**](ImportIndexUsersResponse.md)
 
 ### Authorization
 

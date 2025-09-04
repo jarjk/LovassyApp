@@ -4,28 +4,25 @@
 mod cryptography;
 mod grades_processor;
 
-use std::collections::HashMap;
-
+use crate::cryptography::{hash, kyber_encrypt};
+use crate::grades_processor::BackboardGrade;
+use crate::grades_processor::GradeCollection;
+use crate::grades_processor::process_grades_excel_file;
+use api::apis::Error;
 use api::apis::configuration::{ApiKey, Configuration};
 use api::apis::import_api::{
     api_import_grades_user_id_post, api_import_reset_key_password_put, api_import_users_get,
 };
 use api::apis::status_api::api_status_service_status_get;
-use api::apis::Error;
 use api::models::{
     ImportImportGradesRequestBody, ImportUpdateResetKeyPasswordRequestBody,
     StatusViewServiceStatusResponse,
 };
-use grades_processor::{process_students_excel_file, BackboardStudent};
-use tauri::http::status::StatusCode;
+use grades_processor::{BackboardStudent, process_students_excel_file};
+use std::collections::HashMap;
+use tauri::Emitter;
 use tauri::Window;
 use tauri_plugin_autostart::MacosLauncher;
-
-use crate::grades_processor::process_grades_excel_file;
-use crate::grades_processor::BackboardGrade;
-use crate::grades_processor::GradeCollection;
-
-use crate::cryptography::{hash, kyber_encrypt};
 
 #[tauri::command]
 async fn upload_reset_key_password(
@@ -49,13 +46,7 @@ async fn upload_reset_key_password(
     .await
     .map_err(|e| match e {
         //Match 401 error
-        Error::ResponseError(response_error) => {
-            if let StatusCode::UNAUTHORIZED = response_error.status {
-                "401".to_string()
-            } else {
-                "error".to_string() // TODO: maybe find a better way to handle this (not important for now)
-            }
-        }
+        Error::ResponseError(response_error) => response_error.status.as_str().to_string(),
         _ => "error".to_string(), // TODO: maybe find a better way to handle this (not important for now)
     })
 }
@@ -89,19 +80,7 @@ async fn import_grades(
     let users = api_import_users_get(&config.clone(), None, None, None, None)
         .await
         .map_err(|e| match e {
-            Error::ResponseError(response_error) => {
-                if let StatusCode::UNAUTHORIZED = response_error.status {
-                    "401".to_string()
-                } else if StatusCode::NOT_FOUND == response_error.status {
-                    "404".to_string()
-                } else if StatusCode::TOO_MANY_REQUESTS == response_error.status {
-                    "429".to_string()
-                } else if StatusCode::INTERNAL_SERVER_ERROR == response_error.status {
-                    "500".to_string()
-                } else {
-                    "error".to_string() // TODO: maybe find a better way to handle this (not important for now)
-                }
-            }
+            Error::ResponseError(response_error) => response_error.status.as_str().to_string(),
             _ => "unknown".to_string(), // TODO: maybe find a better way to handle this (not important for now)
         })?;
 
@@ -124,7 +103,7 @@ async fn import_grades(
     for grade in grades {
         grade_map
             .entry(hash(grade.clone().om_code))
-            .or_insert(Vec::new())
+            .or_default()
             .push(grade);
     }
 
@@ -159,7 +138,6 @@ async fn import_grades(
                             .as_mut()
                             .unwrap()
                             .get(&user.clone().om_code_hashed.unwrap().unwrap())
-                            .clone()
                             .unwrap()
                             .class
                             .clone(),
@@ -168,8 +146,7 @@ async fn import_grades(
                     user_grades
                         .unwrap()
                         .iter()
-                        .find(|grade| grade.school_class.is_some())
-                        .map(|grade| grade.school_class.clone().unwrap())
+                        .find_map(|grade| grade.school_class.clone())
                 };
 
                 let student_name = if students_map.as_mut().is_some() {
@@ -177,7 +154,6 @@ async fn import_grades(
                         .as_mut()
                         .unwrap()
                         .get(&user.clone().om_code_hashed.unwrap().unwrap())
-                        .clone()
                         .unwrap()
                         .name
                         .clone()
@@ -208,17 +184,7 @@ async fn import_grades(
                 .await
                 .map_err(|e| match e {
                     Error::ResponseError(response_error) => {
-                        if StatusCode::UNAUTHORIZED == response_error.status {
-                            "401".to_string()
-                        } else if StatusCode::NOT_FOUND == response_error.status {
-                            "404".to_string()
-                        } else if StatusCode::TOO_MANY_REQUESTS == response_error.status {
-                            "429".to_string()
-                        } else if StatusCode::INTERNAL_SERVER_ERROR == response_error.status {
-                            "500".to_string()
-                        } else {
-                            "error".to_string() // TODO: maybe find a better way to handle this (not important for now)
-                        }
+                        response_error.status.as_str().to_string()
                     }
                     _ => "unknown".to_string(), // TODO: maybe find a better way to handle this (not important for now)
                 })?;
@@ -226,7 +192,7 @@ async fn import_grades(
         }
         count += 1;
         window
-            .emit("import-progress", (count / &users.len()) * 100)
+            .emit("import-progress", (count / users.len()) * 100)
             .unwrap();
     }
 
@@ -240,13 +206,17 @@ async fn status(blueboard_url: String) -> Result<StatusViewServiceStatusResponse
 
     api_status_service_status_get(&config)
         .await
-        .map_err(|e| match e {
-            _ => "error".to_string(), // TODO: maybe find a better way to handle this (not important for now)
-        })
+        .map_err(|e| "error".to_string())
 }
 
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_store::Builder::new().build())
+        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
+        .plugin(tauri_plugin_autostart::Builder::new().build())
+        .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_autostart::init(
             MacosLauncher::LaunchAgent,
             None,

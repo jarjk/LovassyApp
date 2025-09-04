@@ -14,7 +14,7 @@ Method | HTTP request | Description
 
 ## api_qr_codes_get
 
-> Vec<crate::models::ShopIndexQrCodesResponse> api_qr_codes_get(filters, sorts, page, page_size)
+> Vec<models::ShopIndexQrCodesResponse> api_qr_codes_get(filters, sorts, page, page_size)
 Get a list of all QR codes
 
 Requires verified email; Requires one of the following permissions: Shop.IndexQRCodes; Requires the following features to be enabled: Shop
@@ -31,7 +31,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**Vec<crate::models::ShopIndexQrCodesResponse>**](ShopIndexQRCodesResponse.md)
+[**Vec<models::ShopIndexQrCodesResponse>**](ShopIndexQRCodesResponse.md)
 
 ### Authorization
 
@@ -77,7 +77,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_qr_codes_id_get
 
-> crate::models::ShopViewQrCodeResponse api_qr_codes_id_get(id)
+> models::ShopViewQrCodeResponse api_qr_codes_id_get(id)
 Get information about a QR code
 
 Requires verified email; Requires one of the following permissions: Shop.ViewQRCode; Requires the following features to be enabled: Shop
@@ -91,7 +91,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::ShopViewQrCodeResponse**](ShopViewQRCodeResponse.md)
+[**models::ShopViewQrCodeResponse**](ShopViewQRCodeResponse.md)
 
 ### Authorization
 
@@ -138,7 +138,7 @@ Name | Type | Description  | Required | Notes
 
 ## api_qr_codes_post
 
-> crate::models::ShopCreateQrCodeResponse api_qr_codes_post(shop_create_qr_code_request_body)
+> models::ShopCreateQrCodeResponse api_qr_codes_post(shop_create_qr_code_request_body)
 Create a new QR code
 
 Requires verified email; Requires one of the following permissions: Shop.CreateQRCode; Requires the following features to be enabled: Shop
@@ -152,7 +152,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**crate::models::ShopCreateQrCodeResponse**](ShopCreateQRCodeResponse.md)
+[**models::ShopCreateQrCodeResponse**](ShopCreateQRCodeResponse.md)
 
 ### Authorization
 

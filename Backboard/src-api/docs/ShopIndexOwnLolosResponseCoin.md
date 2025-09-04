@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **is_spent** | Option<**bool**> |  | [optional]
 **lolo_type** | Option<**String**> |  | [optional]
 **reason** | Option<**String**> |  | [optional]
-**grades** | Option<[**Vec<crate::models::ShopIndexOwnLolosResponseGrade>**](ShopIndexOwnLolosResponseGrade.md)> |  | [optional]
+**grades** | Option<[**Vec<models::ShopIndexOwnLolosResponseGrade>**](ShopIndexOwnLolosResponseGrade.md)> |  | [optional]
 **created_at** | Option<**String**> |  | [optional]
 **updated_at** | Option<**String**> |  | [optional]
 
