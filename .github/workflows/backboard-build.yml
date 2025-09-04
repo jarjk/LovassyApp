@@ -47,7 +47,7 @@ jobs:
       - name: Build Backboard
         run: |
           cd Backboard
-          pnpm tauri build -b none
+          pnpm tauri build --ci
       - name: Commit new API Client
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
