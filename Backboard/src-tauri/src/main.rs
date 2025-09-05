@@ -210,6 +210,7 @@ async fn status(blueboard_url: String) -> Result<StatusViewServiceStatusResponse
 }
 
 fn main() {
+    env_logger::init();
     tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
