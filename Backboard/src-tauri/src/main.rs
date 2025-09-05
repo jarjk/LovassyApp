@@ -24,6 +24,14 @@ use tauri::Emitter;
 use tauri::Window;
 use tauri_plugin_autostart::MacosLauncher;
 
+/// extract http error status code if available, otherwise convert it into a string
+fn handle_api_err<E: std::fmt::Debug>(e: Error<E>) -> String {
+    log::error!("error: {e:#?}");
+    match e {
+        Error::ResponseError(response_error) => response_error.status.as_str().to_string(),
+        other_err => other_err.to_string(),
+    }
+}
 #[tauri::command]
 async fn upload_reset_key_password(
     blueboard_url: String,
@@ -44,11 +52,7 @@ async fn upload_reset_key_password(
         )),
     )
     .await
-    .map_err(|e| match e {
-        //Match 401 error
-        Error::ResponseError(response_error) => response_error.status.as_str().to_string(),
-        _ => "error".to_string(), // TODO: maybe find a better way to handle this (not important for now)
-    })
+    .map_err(handle_api_err)
 }
 
 #[tauri::command]
@@ -79,10 +83,7 @@ async fn import_grades(
 
     let users = api_import_users_get(&config.clone(), None, None, None, None)
         .await
-        .map_err(|e| match e {
-            Error::ResponseError(response_error) => response_error.status.as_str().to_string(),
-            _ => "unknown".to_string(), // TODO: maybe find a better way to handle this (not important for now)
-        })?;
+        .map_err(handle_api_err)?;
 
     window.emit("import-users", &users.len()).unwrap();
 
@@ -182,12 +183,7 @@ async fn import_grades(
                     }),
                 )
                 .await
-                .map_err(|e| match e {
-                    Error::ResponseError(response_error) => {
-                        response_error.status.as_str().to_string()
-                    }
-                    _ => "unknown".to_string(), // TODO: maybe find a better way to handle this (not important for now)
-                })?;
+                .map_err(handle_api_err)?;
             }
         }
         count += 1;
@@ -206,7 +202,7 @@ async fn status(blueboard_url: String) -> Result<StatusViewServiceStatusResponse
 
     api_status_service_status_get(&config)
         .await
-        .map_err(|e| "error".to_string())
+        .map_err(handle_api_err)
 }
 
 fn main() {

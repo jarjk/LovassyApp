@@ -83,7 +83,7 @@ const GradeImportPage = (): JSX.Element => {
             else if (error === "404") setError("Egy megadott felhasználó nem létezik!");
             else if (error === "500") setError("Szerver hiba történt!");
             else if (error === "unknown") setError("Ismeretlen reqwest hiba történt!");
-            else setError("Nem sikerült feltölteni a jegyeket!");
+            else setError(`Nem sikerült feltölteni a jegyeket! (${error})`);
         }
 
         setTimeout(() => {

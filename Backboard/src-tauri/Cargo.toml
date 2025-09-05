@@ -31,6 +31,7 @@ tauri-plugin-http = "2"
 tauri-plugin-dialog = "2"
 tauri-plugin-shell = "2"
 env_logger = { version = "0.11.8", default-features = false }
+log = "0.4.28"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
