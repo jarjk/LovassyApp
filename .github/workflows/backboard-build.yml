@@ -17,6 +17,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         id: pnpm-install
@@ -32,10 +33,12 @@ jobs:
 
       - name: Setup rust
         uses: dtolnay/rust-toolchain@stable
+
       - name: Setup rust cache
         uses: swatinem/rust-cache@v2
         with:
           workspaces: 'Backboard/src-tauri -> target'
+
       - name: Generate Rust API Client
         uses: openapi-generators/openapitools-generator-action@v1
         with:
@@ -43,19 +46,20 @@ jobs:
           openapi-file: openapi_dev/schema.json
           command-args: -o Backboard/src-api --additional-properties=packageName=api
           generator-tag: v7.15.0
+
       - name: Install Backboard dependencies
         run: |
           cd Backboard
           pnpm install --no-frozen-lockfile
+
       - name: Check, test and build Backboard
         run: |
           cd Backboard/src-tauri
-          ls
-          ls target
           cargo check
           cargo test
           cd .. # Back to board
           pnpm tauri build --ci --no-bundle
+
       - name: Commit new API Client
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
