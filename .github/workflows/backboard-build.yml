@@ -44,9 +44,12 @@ jobs:
         run: |
           cd Backboard
           pnpm install --no-frozen-lockfile
-      - name: Build Backboard
+      - name: Check, test and build Backboard
         run: |
-          cd Backboard
+          cd Backboard/src-tauri
+          cargo check
+          cargo test
+          cd .. # Back to board
           pnpm tauri build --ci --no-bundle
       - name: Commit new API Client
         uses: stefanzweifel/git-auto-commit-action@v4

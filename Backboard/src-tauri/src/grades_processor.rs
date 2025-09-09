@@ -1,21 +1,5 @@
 use api::models::ImportIndexUsersResponse;
-use calamine::{Error as CalamineError, RangeDeserializerBuilder, Reader, Xlsx, open_workbook};
 use serde::{Deserialize, Serialize};
-
-fn de_opt_string<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
-where
-    D: serde::Deserializer<'de>,
-{
-    let data_type = calamine::Data::deserialize(deserializer);
-    match data_type {
-        Ok(calamine::Data::Error(_e)) => Ok(None),
-        Ok(calamine::Data::Float(f)) => Ok(Some(f.to_string())),
-        Ok(calamine::Data::Int(i)) => Ok(Some(i.to_string())),
-        Ok(calamine::Data::String(s)) => Ok(Some(s)),
-        Ok(calamine::Data::DateTime(d)) => Ok(Some(d.to_string())),
-        _ => Ok(None),
-    }
-}
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "PascalCase")]
@@ -25,7 +9,7 @@ pub struct BackboardGrade {
     #[serde(rename(deserialize = "Tanuló osztálya"), skip_serializing)]
     pub school_class: Option<String>,
     #[serde(rename(deserialize = "Születési idő"), skip_serializing)]
-    pub date_of_birth: Option<String>,
+    date_of_birth: Option<String>,
     #[serde(rename(deserialize = "Tanuló azonosítója"), skip_serializing)]
     pub om_code: String,
     #[serde(rename(deserialize = "Tárgy kategória"))]
@@ -34,27 +18,15 @@ pub struct BackboardGrade {
     subject: String,
     #[serde(rename(deserialize = "Osztály/Csoport név"))]
     group: String,
-    #[serde(
-        rename(deserialize = "Pedagógus név"),
-        deserialize_with = "de_opt_string",
-        default
-    )]
+    #[serde(rename(deserialize = "Pedagógus név"), default)]
     teacher: Option<String>,
     #[serde(rename(deserialize = "Téma"))]
     theme: String,
-    #[serde(
-        rename(deserialize = "Értékelés módja", serialize = "Type"),
-        deserialize_with = "de_opt_string",
-        default
-    )]
+    #[serde(rename(deserialize = "Értékelés módja", serialize = "Type"), default)]
     grade_type: Option<String>,
     #[serde(rename(deserialize = "Osztályzat"))]
     text_grade: String,
-    #[serde(
-        rename(deserialize = "Jegy"),
-        deserialize_with = "de_opt_string",
-        default
-    )]
+    #[serde(rename(deserialize = "Jegy"), default)]
     grade: Option<String>,
     #[serde(rename(deserialize = "Szöveges értékelés"))]
     short_text_grade: String,
@@ -68,7 +40,7 @@ pub struct BackboardGrade {
     create_date: String,
     #[serde(rename(deserialize = "Rögzítés dátuma"))]
     record_date: String,
-    #[serde(rename(deserialize = "Utolsó rögzítés dátuma"))]
+    #[serde(rename(deserialize = "Utolsó mentés dátuma"))]
     last_save_date: String,
 }
 
@@ -76,41 +48,33 @@ pub struct BackboardGrade {
 pub struct BackboardStudent {
     #[serde(rename(deserialize = "Név"))]
     pub name: String,
-    #[serde(rename(deserialize = "Oktatási azonosító"))]
+    #[serde(rename(deserialize = "Oktatási azonosítója"))]
     pub om_code: String,
     #[serde(rename(deserialize = "Osztály"))]
     pub class: String,
 }
 
-pub fn process_grades_excel_file(file_path: String) -> Result<Vec<BackboardGrade>, CalamineError> {
-    let mut workbook: Xlsx<_> = open_workbook(file_path)?;
-    let range = workbook.worksheet_range("Évközi jegyek")?;
-
-    let mut iter = RangeDeserializerBuilder::new()
-        .from_range::<_, BackboardGrade>(&range)?
-        .enumerate();
+pub fn process_grades_csv_file(file_path: String) -> Result<Vec<BackboardGrade>, csv::Error> {
+    let mut raw_csv = csv::Reader::from_path(file_path)?;
+    let mut reader = raw_csv.deserialize();
 
     let mut grades = Vec::new();
-    while let Some((_, Ok(grade))) = iter.next() {
-        grades.push(grade);
+    while let Some(grade) = reader.next() {
+        grades.push(grade?);
     }
 
     Ok(grades)
 }
 
-pub fn process_students_excel_file(
+pub fn process_students_csv_file(
     students_file_path: String,
-) -> Result<Vec<BackboardStudent>, CalamineError> {
-    let mut workbook: Xlsx<_> = open_workbook(students_file_path)?;
-    let range = workbook.worksheet_range("Munka1")?;
-
-    let mut iter = RangeDeserializerBuilder::new()
-        .from_range::<_, BackboardStudent>(&range)?
-        .enumerate();
+) -> Result<Vec<BackboardStudent>, csv::Error> {
+    let mut csv_raw = csv::Reader::from_path(students_file_path)?;
+    let mut rdr = csv_raw.deserialize();
 
     let mut students = Vec::new();
-    while let Some((_, Ok(student))) = iter.next() {
-        students.push(student);
+    while let Some(student) = rdr.next() {
+        students.push(student?);
     }
 
     Ok(students)
@@ -141,4 +105,22 @@ pub struct GradeCollection {
     pub school_class: Option<String>,
     pub student_name: String,
     pub user: BackboardUser,
+}
+
+#[test]
+fn parse_grades() {
+    let path = String::from("test_grades.csv");
+    assert!(std::fs::exists(&path).unwrap());
+    let grades = process_grades_csv_file(path).inspect_err(|err| eprintln!("{err}"));
+    assert!(grades.is_ok());
+    let _grades = grades.unwrap();
+}
+
+#[test]
+fn parse_students() {
+    let path = String::from("test_students.csv");
+    assert!(std::fs::exists(&path).unwrap());
+    let students = process_students_csv_file(path).inspect_err(|err| eprintln!("{err}"));
+    assert!(students.is_ok());
+    let _students = students.unwrap();
 }

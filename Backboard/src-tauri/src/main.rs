@@ -7,7 +7,7 @@ mod grades_processor;
 use crate::cryptography::{hash, kyber_encrypt};
 use crate::grades_processor::BackboardGrade;
 use crate::grades_processor::GradeCollection;
-use crate::grades_processor::process_grades_excel_file;
+use crate::grades_processor::process_grades_csv_file;
 use api::apis::Error;
 use api::apis::configuration::{ApiKey, Configuration};
 use api::apis::import_api::{
@@ -18,7 +18,7 @@ use api::models::{
     ImportImportGradesRequestBody, ImportUpdateResetKeyPasswordRequestBody,
     StatusViewServiceStatusResponse,
 };
-use grades_processor::{BackboardStudent, process_students_excel_file};
+use grades_processor::{BackboardStudent, process_students_csv_file};
 use std::collections::HashMap;
 use tauri::Emitter;
 use tauri::Window;
@@ -87,13 +87,12 @@ async fn import_grades(
 
     window.emit("import-users", &users.len()).unwrap();
 
-    let grades = process_grades_excel_file(grades_file_path)
-        .map_err(|err: calamine::Error| err.to_string())?;
+    let grades = process_grades_csv_file(grades_file_path).map_err(|err| err.to_string())?;
 
     let students = if students_file_path.is_some() {
         Some(
-            process_students_excel_file(students_file_path.unwrap())
-                .map_err(|err: calamine::Error| err.to_string())?,
+            process_students_csv_file(students_file_path.unwrap())
+                .map_err(|err| err.to_string())?,
         )
     } else {
         None

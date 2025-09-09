@@ -106,8 +106,8 @@ const GradeImportPage = (): JSX.Element => {
                         multiple: false,
                         filters: [
                             {
-                                name: "Excel táblázat",
-                                extensions: ["xlsx"],
+                                name: "Táblázat",
+                                extensions: ["csv"],
                             },
                         ],
                     });
@@ -125,8 +125,8 @@ const GradeImportPage = (): JSX.Element => {
                     }
                 }}
                 label="Jegyek"
-                description="A diákok jegyeit tartalmazó Excel táblázat"
-                placeholder="Tanulok_evkozi_jegyei_XXXXXXXX.xlsx"
+                description="A diákok jegyeit tartalmazó táblázat"
+                placeholder="Tanulok_evkozi_jegyei.csv"
                 withAsterisk={true}
                 clearable={true}
                 disabled={fileDisabled}
@@ -140,8 +140,8 @@ const GradeImportPage = (): JSX.Element => {
                         multiple: false,
                         filters: [
                             {
-                                name: "Excel táblázat",
-                                extensions: ["xlsx"],
+                                name: "Táblázat",
+                                extensions: ["csv"],
                             },
                         ],
                     });
@@ -159,7 +159,7 @@ const GradeImportPage = (): JSX.Element => {
                     }
                 }}
                 label="Tanulók"
-                description="A tanulók adatait (OM azonosító, név, osztály) tartalmazó Excel táblázat"
+                description="A tanulók adatait (OM azonosító, név, osztály) tartalmazó táblázat"
                 clearable={true}
                 disabled={fileDisabled}
             />
