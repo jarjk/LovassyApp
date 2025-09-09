@@ -50,6 +50,8 @@ jobs:
       - name: Check, test and build Backboard
         run: |
           cd Backboard/src-tauri
+          ls
+          ls target
           cargo check
           cargo test
           cd .. # Back to board
