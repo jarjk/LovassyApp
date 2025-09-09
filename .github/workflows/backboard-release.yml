@@ -38,17 +38,18 @@ jobs:
         uses: swatinem/rust-cache@v2
         with:
           workspaces: 'Backboard/src-tauri -> target'
-
-      - name: install dependencies (ubuntu only)
+      
+      - name: Install Tauri dependencies (ubuntu only)
+        uses: awalsh128/cache-apt-pkgs-action@latest
         if: matrix.platform == 'ubuntu-24.04' # This must match the platform value defined above.
-        run: |
-          sudo apt update
-          sudo apt install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+        with:
+          packages: libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+          version: latest          
 
       - name: Install Backboard dependencies
         run: |
           cd Backboard
-          pnpm install --no-frozen-lockfile
+          pnpm install --no-frozen-lockfile --production
       - name: Build Backboard
         uses: tauri-apps/tauri-action@v0
         env:
