@@ -83,7 +83,7 @@ async fn import_grades(
         ..Configuration::new()
     };
 
-    let users = api_import_users_get(&config.clone(), None, None, None, None)
+    let users = api_import_users_get(&config, None, None, None, None)
         .await
         .map_err(handle_api_err)?;
 
@@ -101,7 +101,7 @@ async fn import_grades(
 
     for grade in grades {
         grade_map
-            .entry(hash(grade.clone().om_code))
+            .entry(hash(grade.om_code.clone()))
             .or_default()
             .push(grade);
     }
@@ -114,13 +114,13 @@ async fn import_grades(
 
     if let (Some(students), Some(students_map)) = (students, &mut students_map) {
         for student in students {
-            students_map.insert(hash(student.clone().om_code), student);
+            students_map.insert(hash(student.om_code.clone()), student);
         }
     }
 
     let mut count = 0;
     for user in &users {
-        let om_code_hashed = &user.clone().om_code_hashed.unwrap().unwrap();
+        let om_code_hashed = &user.om_code_hashed.clone().unwrap().unwrap();
         let Some(user_grades) = grade_map.get(om_code_hashed) else {
             continue;
         };
