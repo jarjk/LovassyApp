@@ -56,10 +56,8 @@ pub struct BackboardStudent {
 
 pub fn process_grades_csv_file(file_path: String) -> Result<Vec<BackboardGrade>, csv::Error> {
     let mut raw_csv = csv::Reader::from_path(file_path)?;
-    let mut reader = raw_csv.deserialize();
-
     let mut grades = Vec::new();
-    while let Some(grade) = reader.next() {
+    for grade in raw_csv.deserialize() {
         grades.push(grade?);
     }
 
@@ -70,10 +68,8 @@ pub fn process_students_csv_file(
     students_file_path: String,
 ) -> Result<Vec<BackboardStudent>, csv::Error> {
     let mut csv_raw = csv::Reader::from_path(students_file_path)?;
-    let mut rdr = csv_raw.deserialize();
-
     let mut students = Vec::new();
-    while let Some(student) = rdr.next() {
+    for student in csv_raw.deserialize() {
         students.push(student?);
     }
 

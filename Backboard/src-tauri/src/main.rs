@@ -18,7 +18,7 @@ use api::models::{
     ImportImportGradesRequestBody, ImportUpdateResetKeyPasswordRequestBody,
     StatusViewServiceStatusResponse,
 };
-use grades_processor::{BackboardStudent, process_students_csv_file};
+use grades_processor::process_students_csv_file;
 use std::collections::HashMap;
 use tauri::Emitter;
 use tauri::Window;
@@ -74,12 +74,14 @@ async fn import_grades(
         .await?;
     }
 
-    let mut config = Configuration::new();
-    config.base_path = blueboard_url;
-    config.api_key = Some(ApiKey {
-        prefix: None,
-        key: import_key,
-    });
+    let config = Configuration {
+        base_path: blueboard_url,
+        api_key: Some(ApiKey {
+            prefix: None,
+            key: import_key,
+        }),
+        ..Configuration::new()
+    };
 
     let users = api_import_users_get(&config.clone(), None, None, None, None)
         .await
@@ -89,11 +91,8 @@ async fn import_grades(
 
     let grades = process_grades_csv_file(grades_file_path).map_err(|err| err.to_string())?;
 
-    let students = if students_file_path.is_some() {
-        Some(
-            process_students_csv_file(students_file_path.unwrap())
-                .map_err(|err| err.to_string())?,
-        )
+    let students = if let Some(path) = students_file_path {
+        Some(process_students_csv_file(path).map_err(|err| err.to_string())?)
     } else {
         None
     };
@@ -107,84 +106,63 @@ async fn import_grades(
             .push(grade);
     }
 
-    let mut students_map: Option<HashMap<String, BackboardStudent>> = if students.clone().is_some()
-    {
+    let mut students_map = if students.is_some() {
         Some(HashMap::new())
     } else {
         None
     };
 
-    if students_map.clone().is_some() {
-        for student in students.unwrap() {
-            students_map
-                .as_mut()
-                .unwrap()
-                .insert(hash(student.clone().om_code), student);
+    if let (Some(students), Some(students_map)) = (students, &mut students_map) {
+        for student in students {
+            students_map.insert(hash(student.clone().om_code), student);
         }
     }
 
     let mut count = 0;
     for user in &users {
-        let user_grades = grade_map.get(&user.clone().om_code_hashed.unwrap().unwrap());
+        let om_code_hashed = &user.clone().om_code_hashed.unwrap().unwrap();
+        let Some(user_grades) = grade_map.get(om_code_hashed) else {
+            continue;
+        };
 
-        match user_grades {
-            None => continue,
-            Some(_) => {
-                let public_key = user.public_key.clone().unwrap().unwrap();
+        let public_key = user.public_key.clone().unwrap().unwrap();
 
-                let school_class: Option<String> = if students_map.as_mut().is_some() {
-                    Some(
-                        students_map
-                            .as_mut()
-                            .unwrap()
-                            .get(&user.clone().om_code_hashed.unwrap().unwrap())
-                            .unwrap()
-                            .class
-                            .clone(),
-                    )
-                } else {
-                    user_grades
-                        .unwrap()
-                        .iter()
-                        .find_map(|grade| grade.school_class.clone())
-                };
+        let school_class = if let Some(students_map) = &mut students_map {
+            Some(students_map.get(om_code_hashed).unwrap().class.clone())
+        } else {
+            user_grades
+                .iter()
+                .find_map(|grade| grade.school_class.clone())
+        };
+        let student_name = if let Some(students_map) = &mut students_map {
+            students_map.get(om_code_hashed).unwrap().name.clone()
+        } else {
+            user_grades[0].student_name.clone()
+        };
 
-                let student_name = if students_map.as_mut().is_some() {
-                    students_map
-                        .as_mut()
-                        .unwrap()
-                        .get(&user.clone().om_code_hashed.unwrap().unwrap())
-                        .unwrap()
-                        .name
-                        .clone()
-                } else {
-                    user_grades.unwrap()[0].student_name.clone()
-                };
+        let grade_collection = GradeCollection {
+            grades: user_grades.clone(),
+            school_class,
+            student_name,
+            user: user.clone().into(),
+        };
 
-                let grade_collection = GradeCollection {
-                    grades: user_grades.unwrap().clone(),
-                    school_class,
-                    student_name,
-                    user: user.clone().into(),
-                };
+        let grade_collection_encrypted = kyber_encrypt(
+            serde_json::to_string(&grade_collection).unwrap(),
+            public_key,
+        )
+        .map_err(|e| e.to_string())?;
 
-                let grade_collection_encrypted = kyber_encrypt(
-                    serde_json::to_string(&grade_collection).unwrap(),
-                    public_key,
-                )
-                .map_err(|e| e.to_string())?;
+        api_import_grades_user_id_post(
+            &config,
+            &user.id.unwrap().to_string(),
+            Some(ImportImportGradesRequestBody {
+                json_encrypted: grade_collection_encrypted,
+            }),
+        )
+        .await
+        .map_err(handle_api_err)?;
 
-                api_import_grades_user_id_post(
-                    &config,
-                    &user.id.unwrap().to_string(),
-                    Some(ImportImportGradesRequestBody {
-                        json_encrypted: grade_collection_encrypted,
-                    }),
-                )
-                .await
-                .map_err(handle_api_err)?;
-            }
-        }
         count += 1;
         window
             .emit("import-progress", (count / users.len()) * 100)
