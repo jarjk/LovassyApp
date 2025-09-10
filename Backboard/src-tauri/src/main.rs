@@ -89,39 +89,31 @@ async fn import_grades(
 
     window.emit("import-users", &users.len()).unwrap();
 
-    let grades = process_grades_csv_file(grades_file_path).map_err(|err| err.to_string())?;
-
-    let students = if let Some(path) = students_file_path {
-        Some(process_students_csv_file(path).map_err(|err| err.to_string())?)
-    } else {
-        None
-    };
-
-    let mut grade_map: HashMap<String, Vec<BackboardGrade>> = HashMap::new();
-
-    for grade in grades {
-        grade_map
-            .entry(hash(grade.om_code.clone()))
+    let imported_grades =
+        process_grades_csv_file(grades_file_path).map_err(|err| err.to_string())?;
+    let mut imported_grade_map: HashMap<String, Vec<BackboardGrade>> = HashMap::new();
+    for grade in imported_grades {
+        imported_grade_map
+            .entry(hash(&grade.om_code))
             .or_default()
             .push(grade);
     }
 
-    let mut students_map = if students.is_some() {
-        Some(HashMap::new())
+    let mut students_map = if let Some(path) = students_file_path {
+        let students = process_students_csv_file(path).map_err(|err| err.to_string())?;
+        let s_map = students
+            .into_iter()
+            .map(|s| (hash(&s.om_code), s))
+            .collect::<HashMap<_, _>>();
+        Some(s_map)
     } else {
         None
     };
 
-    if let (Some(students), Some(students_map)) = (students, &mut students_map) {
-        for student in students {
-            students_map.insert(hash(student.om_code.clone()), student);
-        }
-    }
-
     let mut count = 0;
     for user in &users {
         let om_code_hashed = &user.om_code_hashed.clone().unwrap().unwrap();
-        let Some(user_grades) = grade_map.get(om_code_hashed) else {
+        let Some(user_grades) = imported_grade_map.get(om_code_hashed) else {
             continue;
         };
 
@@ -148,7 +140,7 @@ async fn import_grades(
         };
 
         let grade_collection_encrypted = kyber_encrypt(
-            serde_json::to_string(&grade_collection).unwrap(),
+            &serde_json::to_string(&grade_collection).unwrap(),
             public_key,
         )
         .map_err(|e| e.to_string())?;
