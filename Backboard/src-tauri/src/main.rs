@@ -65,13 +65,16 @@ async fn import_grades(
     import_key: String,
     update_reset_key_password: bool,
 ) -> Result<(), String> {
+    log::info!("importing grades");
     if update_reset_key_password {
+        log::info!("uploading reset key password");
         upload_reset_key_password(
             blueboard_url.clone(),
             reset_key_password,
             import_key.clone(),
         )
         .await?;
+        log::info!("succesfully uploaded reset key password");
     }
 
     let config = Configuration {
@@ -86,11 +89,16 @@ async fn import_grades(
     let users = api_import_users_get(&config, None, None, None, None)
         .await
         .map_err(handle_api_err)?;
+    log::info!("users fetched from server already there");
+    log::debug!("{users:?}");
 
     window.emit("import-users", &users.len()).unwrap();
 
+    log::info!("processing grades from {grades_file_path:?}");
     let imported_grades =
         process_grades_csv_file(grades_file_path).map_err(|err| err.to_string())?;
+    log::info!("successfully processed grades");
+    log::debug!("{imported_grades:?}");
     let mut imported_grade_map: HashMap<String, Vec<BackboardGrade>> = HashMap::new();
     for grade in imported_grades {
         imported_grade_map
@@ -98,9 +106,13 @@ async fn import_grades(
             .or_default()
             .push(grade);
     }
+    log::debug!("om-id mapped grades: {imported_grade_map:?}");
 
     let mut students_map = if let Some(path) = students_file_path {
+        log::info!("processing students from {path:?}");
         let students = process_students_csv_file(path).map_err(|err| err.to_string())?;
+        log::info!("successfully processed students");
+        log::debug!("{students:?}");
         let s_map = students
             .into_iter()
             .map(|s| (hash(&s.om_code), s))
@@ -109,28 +121,36 @@ async fn import_grades(
     } else {
         None
     };
+    log::debug!("hashed om-id mapped students: {students_map:?}");
 
     let mut count = 0;
     for user in &users {
+        log::debug!("processing {user:?}");
         let om_code_hashed = &user.om_code_hashed.clone().unwrap().unwrap();
         let Some(user_grades) = imported_grade_map.get(om_code_hashed) else {
+            log::warn!("no imported grades found");
             continue;
         };
+        log::debug!("freshly imported grades {user_grades:?}");
 
         let public_key = user.public_key.clone().unwrap().unwrap();
 
         let school_class = if let Some(students_map) = &mut students_map {
             Some(students_map.get(om_code_hashed).unwrap().class.clone())
         } else {
+            log::warn!("school class not found in student data, falling back to grades");
             user_grades
                 .iter()
                 .find_map(|grade| grade.school_class.clone())
         };
+        log::debug!("user's school class: {school_class:?}");
         let student_name = if let Some(students_map) = &mut students_map {
             students_map.get(om_code_hashed).unwrap().name.clone()
         } else {
+            log::warn!("school class not found in student data, falling back to grades");
             user_grades[0].student_name.clone()
         };
+        log::debug!("user's name: {student_name}");
 
         let grade_collection = GradeCollection {
             grades: user_grades.clone(),
@@ -138,13 +158,17 @@ async fn import_grades(
             student_name,
             user: user.clone().into(),
         };
+        log::trace!("user's grade collection: {grade_collection:?}");
 
+        log::info!("encrypting user's grade collection");
         let grade_collection_encrypted = kyber_encrypt(
             &serde_json::to_string(&grade_collection).unwrap(),
             public_key,
         )
         .map_err(|e| e.to_string())?;
+        log::info!("successfully encrypted user's grade collection");
 
+        log::info!("posting user's data");
         api_import_grades_user_id_post(
             &config,
             &user.id.unwrap().to_string(),
@@ -154,6 +178,7 @@ async fn import_grades(
         )
         .await
         .map_err(handle_api_err)?;
+        log::info!("successfully posted user's data");
 
         count += 1;
         window
