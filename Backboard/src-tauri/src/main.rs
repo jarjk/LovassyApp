@@ -88,10 +88,11 @@ async fn import_grades(
     let users = api_import_users_get(&config, None, None, None, None)
         .await
         .map_err(handle_api_err)?;
-    log::info!("users fetched from server already there");
+    let num_users = users.len();
+    log::info!("users fetched from server already there ({num_users})");
     log::debug!("{users:?}");
 
-    window.emit("import-users", &users.len()).unwrap();
+    window.emit("import-users", num_users).unwrap();
 
     let imported_grades =
         process_grades_csv_file(grades_file_path).map_err(|err| err.to_string())?;
@@ -104,20 +105,19 @@ async fn import_grades(
     }
     log::debug!("om-id mapped grades: {imported_grade_map:?}");
 
-    let mut students_map = if let Some(path) = students_file_path {
+    let students_map = if let Some(path) = students_file_path {
         let students = process_students_csv_file(path).map_err(|err| err.to_string())?;
-        let s_map = students
+        students
             .into_iter()
             .map(|s| (hash(&s.om_code), s))
-            .collect::<HashMap<_, _>>();
-        Some(s_map)
+            .collect::<HashMap<_, _>>()
     } else {
-        None
+        HashMap::new()
     };
     log::debug!("hashed om-id mapped students: {students_map:?}");
 
     let mut count = 0;
-    for user in &users {
+    for user in users {
         log::debug!("processing {user:?}");
         let om_code_hashed = &user.om_code_hashed.clone().unwrap().unwrap();
         let Some(user_grades) = imported_grade_map.get(om_code_hashed) else {
@@ -127,28 +127,24 @@ async fn import_grades(
         log::debug!("freshly imported grades {user_grades:?}");
 
         let public_key = user.public_key.clone().unwrap().unwrap();
+        log::debug!("user's public key: {public_key:?}");
 
-        let school_class = if let Some(students_map) = &mut students_map {
-            Some(students_map.get(om_code_hashed).unwrap().class.clone())
-        } else {
-            log::warn!("school class not found in student data, falling back to grades");
-            user_grades
-                .iter()
-                .find_map(|grade| grade.school_class.clone())
-        };
+        let (school_class, student_name) =
+            if let Some(student_info) = &students_map.get(om_code_hashed) {
+                (Some(&student_info.class), &student_info.name)
+            } else {
+                log::warn!("user not found in student data, falling back to grades");
+                let cls = user_grades.iter().find_map(|g| g.school_class.as_ref());
+                (cls, &user_grades[0].student_name)
+            };
         log::debug!("user's school class: {school_class:?}");
-        let student_name = if let Some(students_map) = &mut students_map {
-            students_map.get(om_code_hashed).unwrap().name.clone()
-        } else {
-            log::warn!("school class not found in student data, falling back to grades");
-            user_grades[0].student_name.clone()
-        };
+
         log::debug!("user's name: {student_name}");
 
         let grade_collection = GradeCollection {
             grades: user_grades.clone(),
-            school_class,
-            student_name,
+            school_class: school_class.cloned(),
+            student_name: student_name.clone(),
             user: user.clone().into(),
         };
         log::trace!("user's grade collection: {grade_collection:?}");
@@ -175,7 +171,7 @@ async fn import_grades(
 
         count += 1;
         window
-            .emit("import-progress", (count / users.len()) * 100)
+            .emit("import-progress", (count / num_users) * 100)
             .unwrap();
     }
 
