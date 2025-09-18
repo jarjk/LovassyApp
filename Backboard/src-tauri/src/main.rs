@@ -20,8 +20,7 @@ use api::models::{
 };
 use grades_processor::process_students_csv_file;
 use std::collections::HashMap;
-use tauri::Emitter;
-use tauri::Window;
+use tauri::{Emitter, Window};
 use tauri_plugin_autostart::MacosLauncher;
 
 /// extract http error status code if available, otherwise convert it into a string
@@ -45,6 +44,7 @@ async fn upload_reset_key_password(
         key: import_key,
     });
 
+    log::info!("uploading reset key password");
     api_import_reset_key_password_put(
         &config,
         Some(ImportUpdateResetKeyPasswordRequestBody::new(
@@ -67,7 +67,6 @@ async fn import_grades(
 ) -> Result<(), String> {
     log::info!("importing grades");
     if update_reset_key_password {
-        log::info!("uploading reset key password");
         upload_reset_key_password(
             blueboard_url.clone(),
             reset_key_password,
@@ -94,11 +93,8 @@ async fn import_grades(
 
     window.emit("import-users", &users.len()).unwrap();
 
-    log::info!("processing grades from {grades_file_path:?}");
     let imported_grades =
         process_grades_csv_file(grades_file_path).map_err(|err| err.to_string())?;
-    log::info!("successfully processed grades");
-    log::debug!("{imported_grades:?}");
     let mut imported_grade_map: HashMap<String, Vec<BackboardGrade>> = HashMap::new();
     for grade in imported_grades {
         imported_grade_map
@@ -109,10 +105,7 @@ async fn import_grades(
     log::debug!("om-id mapped grades: {imported_grade_map:?}");
 
     let mut students_map = if let Some(path) = students_file_path {
-        log::info!("processing students from {path:?}");
         let students = process_students_csv_file(path).map_err(|err| err.to_string())?;
-        log::info!("successfully processed students");
-        log::debug!("{students:?}");
         let s_map = students
             .into_iter()
             .map(|s| (hash(&s.om_code), s))
@@ -193,14 +186,23 @@ async fn import_grades(
 async fn status(blueboard_url: String) -> Result<StatusViewServiceStatusResponse, String> {
     let mut config = Configuration::new();
     config.base_path = blueboard_url;
+    log::info!("requesting service status");
 
-    api_status_service_status_get(&config)
+    let res = api_status_service_status_get(&config)
         .await
-        .map_err(handle_api_err)
+        .map_err(handle_api_err);
+    log::debug!("service status: {res:?}");
+    res
 }
 
 fn main() {
-    env_logger::init();
+    let log_p = std::path::Path::new(".lovassyapp-backboard.log");
+    ftail::Ftail::new()
+        .console(log::LevelFilter::Info)
+        .single_file(&log_p, true, log::LevelFilter::Debug)
+        .init()
+        .unwrap();
+
     tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())

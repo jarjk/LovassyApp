@@ -54,24 +54,28 @@ pub struct BackboardStudent {
     pub class: String,
 }
 
-pub fn process_grades_csv_file(file_path: String) -> Result<Vec<BackboardGrade>, csv::Error> {
-    let mut raw_csv = csv::Reader::from_path(file_path)?;
+pub fn process_grades_csv_file(path: String) -> Result<Vec<BackboardGrade>, csv::Error> {
+    log::info!("processing grades from {path:?}");
+    let mut raw_csv = csv::Reader::from_path(path)?;
     let mut grades = Vec::new();
     for grade in raw_csv.deserialize() {
         grades.push(grade?);
     }
+    log::info!("successfully processed grades");
+    log::debug!("{grades:?}");
 
     Ok(grades)
 }
 
-pub fn process_students_csv_file(
-    students_file_path: String,
-) -> Result<Vec<BackboardStudent>, csv::Error> {
-    let mut csv_raw = csv::Reader::from_path(students_file_path)?;
+pub fn process_students_csv_file(path: String) -> Result<Vec<BackboardStudent>, csv::Error> {
+    log::info!("processing students from {path:?}");
+    let mut csv_raw = csv::Reader::from_path(path)?;
     let mut students = Vec::new();
     for student in csv_raw.deserialize() {
         students.push(student?);
     }
+    log::info!("successfully processed students");
+    log::debug!("{students:?}");
 
     Ok(students)
 }
