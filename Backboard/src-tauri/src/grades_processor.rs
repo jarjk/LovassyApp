@@ -11,7 +11,7 @@ pub struct BackboardGrade {
     #[serde(rename(deserialize = "Születési idő"), skip_serializing)]
     date_of_birth: Option<String>,
     #[serde(rename(deserialize = "Tanuló azonosítója"), skip_serializing)]
-    pub om_code: String,
+    om_code: String,
     #[serde(rename(deserialize = "Tárgy kategória"))]
     subject_category: String,
     #[serde(rename(deserialize = "Tantárgy"))]
@@ -43,15 +43,25 @@ pub struct BackboardGrade {
     #[serde(rename(deserialize = "Utolsó mentés dátuma"))]
     last_save_date: String,
 }
+impl BackboardGrade {
+    pub fn hashed_om_code(&self) -> String {
+        crate::cryptography::hash(&self.om_code)
+    }
+}
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct BackboardStudent {
     #[serde(rename(deserialize = "Név"))]
     pub name: String,
     #[serde(rename(deserialize = "Oktatási azonosítója"))]
-    pub om_code: String,
+    om_code: String,
     #[serde(rename(deserialize = "Osztály"))]
     pub class: String,
+}
+impl BackboardStudent {
+    pub fn hashed_om_code(&self) -> String {
+        crate::cryptography::hash(&self.om_code)
+    }
 }
 
 pub fn process_grades_csv_file(path: String) -> Result<Vec<BackboardGrade>, csv::Error> {

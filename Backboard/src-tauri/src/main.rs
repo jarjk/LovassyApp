@@ -4,10 +4,6 @@
 mod cryptography;
 mod grades_processor;
 
-use crate::cryptography::{hash, kyber_encrypt};
-use crate::grades_processor::BackboardGrade;
-use crate::grades_processor::GradeCollection;
-use crate::grades_processor::process_grades_csv_file;
 use api::apis::Error;
 use api::apis::configuration::{ApiKey, Configuration};
 use api::apis::import_api::{
@@ -18,7 +14,9 @@ use api::models::{
     ImportImportGradesRequestBody, ImportUpdateResetKeyPasswordRequestBody,
     StatusViewServiceStatusResponse,
 };
-use grades_processor::process_students_csv_file;
+use grades_processor::{
+    BackboardGrade, GradeCollection, process_grades_csv_file, process_students_csv_file,
+};
 use std::collections::HashMap;
 use tauri::{Emitter, Window};
 use tauri_plugin_autostart::MacosLauncher;
@@ -99,7 +97,7 @@ async fn import_grades(
     let mut imported_grade_map: HashMap<String, Vec<BackboardGrade>> = HashMap::new();
     for grade in imported_grades {
         imported_grade_map
-            .entry(hash(&grade.om_code))
+            .entry(grade.hashed_om_code())
             .or_default()
             .push(grade);
     }
@@ -109,7 +107,7 @@ async fn import_grades(
         let students = process_students_csv_file(path).map_err(|err| err.to_string())?;
         students
             .into_iter()
-            .map(|s| (hash(&s.om_code), s))
+            .map(|s| (s.hashed_om_code(), s))
             .collect::<HashMap<_, _>>()
     } else {
         HashMap::new()
@@ -150,7 +148,7 @@ async fn import_grades(
         log::trace!("user's grade collection: {grade_collection:?}");
 
         log::info!("encrypting user's grade collection");
-        let grade_collection_encrypted = kyber_encrypt(
+        let grade_collection_encrypted = cryptography::kyber_encrypt(
             &serde_json::to_string(&grade_collection).unwrap(),
             public_key,
         )
