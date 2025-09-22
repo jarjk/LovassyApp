@@ -2,6 +2,7 @@ use api::models::ImportIndexUsersResponse;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+/// NOTE: skipped fields on deserialization are: ["Születési idő", "Utolsó mentés dátuma", "Százalékos értékelés"]
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct BackboardGrade {
@@ -9,8 +10,6 @@ pub struct BackboardGrade {
     pub student_name: String,
     #[serde(rename(deserialize = "Tanuló osztálya"), skip_serializing)]
     pub school_class: Option<String>,
-    #[serde(rename(deserialize = "Születési idő"), skip_serializing)]
-    date_of_birth: Option<String>,
     #[serde(rename(deserialize = "Tanuló azonosítója"), skip_serializing)]
     om_code: String,
     #[serde(rename(deserialize = "Tárgy kategória"))]
@@ -31,8 +30,6 @@ pub struct BackboardGrade {
     grade: Option<String>,
     #[serde(rename(deserialize = "Szöveges értékelés"))]
     short_text_grade: String,
-    #[serde(rename(deserialize = "Százalékos értékelés"))]
-    grade_percentage: String,
     #[serde(rename(deserialize = "Magatartás"))]
     behavior_grade: String,
     #[serde(rename(deserialize = "Szorgalom"))]
@@ -41,8 +38,6 @@ pub struct BackboardGrade {
     create_date: String,
     #[serde(rename(deserialize = "Rögzítés dátuma"))]
     record_date: String,
-    #[serde(rename(deserialize = "Utolsó mentés dátuma"))]
-    last_save_date: String,
 }
 impl BackboardGrade {
     /// replaces `om_code` with empty string
