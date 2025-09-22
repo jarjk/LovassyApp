@@ -22,8 +22,8 @@ pub struct BackboardGrade {
     teacher: Option<String>,
     #[serde(rename(deserialize = "Téma"))]
     theme: String,
-    #[serde(rename(deserialize = "Értékelés módja", serialize = "Type"), default)]
-    grade_type: Option<String>,
+    #[serde(rename(deserialize = "Értékelés módja"), default)]
+    r#type: Option<String>,
     #[serde(rename(deserialize = "Osztályzat"))]
     text_grade: String,
     #[serde(rename(deserialize = "Jegy"), default)]
@@ -123,7 +123,7 @@ fn parse_grades() {
     assert!(std::fs::exists(&path).unwrap());
     let grades = process_grades_csv_file(path).inspect_err(|err| eprintln!("{err}"));
     assert!(grades.is_ok());
-    let _grades = grades.unwrap();
+    eprintln!("imported {:#?}", grades.unwrap());
 }
 
 #[test]
@@ -132,5 +132,5 @@ fn parse_students() {
     assert!(std::fs::exists(&path).unwrap());
     let students = process_students_csv_file(path).inspect_err(|err| eprintln!("{err}"));
     assert!(students.is_ok());
-    let _students = students.unwrap();
+    eprintln!("imported {:#?}", students.unwrap());
 }
