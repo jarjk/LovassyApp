@@ -40,23 +40,6 @@
     "core:window:allow-set-ignore-cursor-events",
     "core:window:allow-start-dragging",
     "core:webview:allow-print",
-    "shell:allow-open",
-    "dialog:allow-open",
-    "dialog:allow-save",
-    "dialog:allow-message",
-    "dialog:allow-ask",
-    "dialog:allow-confirm",
-    {
-      "identifier": "http:default",
-      "allow": [
-        {
-          "url": "https://**/"
-        },
-        {
-          "url": "http://**/"
-        }
-      ]
-    },
     "global-shortcut:allow-is-registered",
     "global-shortcut:allow-register",
     "global-shortcut:allow-register-all",
@@ -64,7 +47,6 @@
     "global-shortcut:allow-unregister-all",
     "http:default",
     "dialog:default",
-    "shell:default",
     "store:default"
   ]
 }

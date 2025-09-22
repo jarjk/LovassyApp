@@ -12,6 +12,7 @@
     "autostart:default",
     "dialog:default",
     "global-shortcut:default",
-    "store:default"
+    "store:default",
+    "http:default"
   ]
 }
