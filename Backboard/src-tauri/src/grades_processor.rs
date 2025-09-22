@@ -116,6 +116,16 @@ pub struct GradeCollection {
     pub student_name: String,
     pub user: BackboardUser,
 }
+impl GradeCollection {
+    pub fn to_encrypted_json(&self, pub_key: String) -> Result<String, String> {
+        log::info!("encrypting user's grade collection");
+        let as_json = serde_json::to_string(&self).map_err(|e| e.to_string())?;
+        let ret =
+            crate::cryptography::kyber_encrypt(&as_json, pub_key).map_err(|e| e.to_string())?;
+        log::info!("successfully encrypted user's grade collection");
+        Ok(ret)
+    }
+}
 
 #[test]
 fn parse_grades() {

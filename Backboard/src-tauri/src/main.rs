@@ -147,20 +147,12 @@ async fn import_grades(
         };
         log::trace!("user's grade collection: {grade_collection:?}");
 
-        log::info!("encrypting user's grade collection");
-        let grade_collection_encrypted = cryptography::kyber_encrypt(
-            &serde_json::to_string(&grade_collection).unwrap(),
-            public_key,
-        )
-        .map_err(|e| e.to_string())?;
-        log::info!("successfully encrypted user's grade collection");
-
         log::info!("posting user's data");
         api_import_grades_user_id_post(
             &config,
             &user.id.unwrap().to_string(),
             Some(ImportImportGradesRequestBody {
-                json_encrypted: grade_collection_encrypted,
+                json_encrypted: grade_collection.to_encrypted_json(public_key)?,
             }),
         )
         .await
