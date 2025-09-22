@@ -17,8 +17,10 @@ const SecurityPage = (): JSX.Element => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (settings.blueboardUrl === "" || settings.importKey === "") {
-            setError("Nincs beállítva Blueboard URL vagy import kulcs!");
+        if (settings.blueboardUrl === "") {
+            setError("Nincs beállítva Blueboard URL!"); }
+        else if (settings.importKey === "") {
+            setError("Nincs beállítva import kulcs!");
         } else {
             setError(null);
         }
