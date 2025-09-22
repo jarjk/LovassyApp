@@ -159,7 +159,7 @@ const GradeImportPage = (): JSX.Element => {
                     }
                 }}
                 label="Tanulók"
-                description="A tanulók adatait (OM azonosító, név, osztály) tartalmazó táblázat"
+                description="A tanulók adatait (OM azonosító; név; osztály) tartalmazó táblázat"
                 clearable={true}
                 disabled={fileDisabled}
             />
