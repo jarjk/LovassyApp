@@ -66,9 +66,9 @@ impl BackboardStudent {
 
 pub fn process_grades_csv_file(path: String) -> Result<Vec<BackboardGrade>, csv::Error> {
     log::info!("processing grades from {path:?}");
-    let mut raw_csv = csv::Reader::from_path(path)?;
+    let mut csv_raw = csv::ReaderBuilder::new().delimiter(b';').from_path(path)?;
     let mut grades = Vec::new();
-    for grade in raw_csv.deserialize() {
+    for grade in csv_raw.deserialize() {
         grades.push(grade?);
     }
     log::info!("successfully processed grades");
@@ -79,7 +79,7 @@ pub fn process_grades_csv_file(path: String) -> Result<Vec<BackboardGrade>, csv:
 
 pub fn process_students_csv_file(path: String) -> Result<Vec<BackboardStudent>, csv::Error> {
     log::info!("processing students from {path:?}");
-    let mut csv_raw = csv::Reader::from_path(path)?;
+    let mut csv_raw = csv::ReaderBuilder::new().delimiter(b';').from_path(path)?;
     let mut students = Vec::new();
     for student in csv_raw.deserialize() {
         students.push(student?);
