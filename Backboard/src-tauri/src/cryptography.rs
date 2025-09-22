@@ -1,3 +1,6 @@
+//! # Cryptography
+//! contains code to (post-quantum) securely hash and encrypt sensitive user data
+
 use base64::{Engine, engine::general_purpose};
 use crypto_hash::{Algorithm, Hasher};
 use libaes::Cipher;

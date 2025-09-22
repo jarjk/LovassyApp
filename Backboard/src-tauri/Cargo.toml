@@ -10,7 +10,7 @@ edition = "2024"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "2", features = [] }
+tauri-build = "2"
 
 [dependencies]
 tauri = "2"
@@ -42,8 +42,8 @@ custom-protocol = ["tauri/custom-protocol"]
 tauri-plugin-autostart = "2"
 tauri-plugin-global-shortcut = "2"
 
+# quits the app on panic instead of letting down the JS promise, that'd wait forever
 [profile.release]
-panic = 'abort'
-
+panic = "abort"
 [profile.dev]
-panic = 'abort'
+panic = "abort"

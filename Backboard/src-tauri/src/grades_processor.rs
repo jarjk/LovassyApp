@@ -1,8 +1,14 @@
+//! # Grades Processor
+//! provides bindings and functions necessary to import grades and user(student) data
+//! also processes imported data to match the format of the server, where it will be sent to
+
 use api::models::ImportIndexUsersResponse;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-/// NOTE: skipped fields on deserialization are: "Születési idő", "Utolsó mentés dátuma", "Százalékos értékelés"
+/// # Backboard Grade
+/// bindings to parse a grade, that comes from an [E-Kreta](https://e-kreta.hu) export created by a school admin
+/// **NOTE**: skipped fields on deserialization are: "Születési idő", "Utolsó mentés dátuma", "Százalékos értékelés"
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct BackboardGrade {
@@ -40,7 +46,7 @@ pub struct BackboardGrade {
     record_date: String,
 }
 impl BackboardGrade {
-    /// replaces `om_code` with empty string
+    /// returns the hashed `om_code`, then replaces it with an empty string
     pub fn hashed_om_code(&mut self) -> String {
         crate::cryptography::hash(&std::mem::take(&mut self.om_code))
     }
@@ -56,12 +62,17 @@ pub struct BackboardStudent {
     pub class: String,
 }
 impl BackboardStudent {
-    /// replaces `om_code` with empty string
+    /// returns the hashed `om_code`, then replaces it with an empty string
     pub fn hashed_om_code(&mut self) -> String {
         crate::cryptography::hash(&std::mem::take(&mut self.om_code))
     }
 }
 
+/// reads, parses and processes a csv grades export from the `path`
+/// a valid example can be found [here](../test_grades.csv)
+/// **NOTE**: the csv shall use the ';' character as delimiter
+/// # Errors
+/// invalid csv
 pub fn process_grades_csv_file(
     path: String,
 ) -> Result<HashMap<String, Vec<BackboardGrade>>, csv::Error> {
@@ -81,6 +92,11 @@ pub fn process_grades_csv_file(
     Ok(grades)
 }
 
+/// reads, parses and processes a csv student-info export from the `path`
+/// a valid example can be found [here](../test_students.csv)
+/// **NOTE**: the csv shall use the ';' character as delimiter
+/// # Errors
+/// invalid csv
 pub fn process_students_csv_file(
     path: String,
 ) -> Result<HashMap<String, BackboardStudent>, csv::Error> {
@@ -97,6 +113,8 @@ pub fn process_students_csv_file(
     Ok(students)
 }
 
+/// data of a user(student) that comes from the server
+/// will be used to add further grades and/or update the information of the account
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct BackboardUser {
@@ -115,6 +133,8 @@ impl From<ImportIndexUsersResponse> for BackboardUser {
     }
 }
 
+/// a nice pack of data containing all the relevant information about a student
+/// it will be sent to the server once further encrypted
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct GradeCollection {
@@ -124,6 +144,9 @@ pub struct GradeCollection {
     pub user: BackboardUser,
 }
 impl GradeCollection {
+    /// convert the [GradeCollection] to json and encrypt it to be safely transferred over the wire to the server
+    /// # Errors
+    /// coming from [serde_json::to_string] and [crate::cryptography::kyber_encrypt]
     pub fn to_encrypted_json(&self, pub_key: String) -> Result<String, String> {
         log::info!("encrypting user's grade collection");
         let as_json = serde_json::to_string(&self).map_err(|e| e.to_string())?;

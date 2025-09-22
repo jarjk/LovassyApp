@@ -19,7 +19,7 @@ use std::collections::HashMap;
 use tauri::{Emitter, Window};
 use tauri_plugin_autostart::MacosLauncher;
 
-/// extract http error status code if available, otherwise convert it into a string
+/// extract http error status code from the [api error](api::apis::Error) if available, otherwise convert it into a string
 fn handle_api_err<E: std::fmt::Debug>(e: Error<E>) -> String {
     log::error!("error: {e:#?}");
     match e {
@@ -27,6 +27,10 @@ fn handle_api_err<E: std::fmt::Debug>(e: Error<E>) -> String {
         other_err => other_err.to_string(),
     }
 }
+
+/// upload the `reset_key_password` to the server at `blueboard_url`, using the `import_key`
+/// # Errors
+/// invalid `import_key`, something with the PUT request
 #[tauri::command]
 async fn upload_reset_key_password(
     blueboard_url: String,
@@ -51,6 +55,15 @@ async fn upload_reset_key_password(
     .map_err(handle_api_err)
 }
 
+/// upload all the new [grades][grades_processor::BackboardGrade] to each registered user's account on the server
+/// **NOTE**: imported data won't be visible right away, check out the code there to see what happens ;)
+/// if `students_file_path` is provided: upload|update the information of the students
+/// if `update_rest_key_password`: upload the `reset_key_password`
+/// # Errors
+/// - coming from [upload_reset_key_password]
+/// - invalid `import_key`
+/// - something with the PUT or GET requests
+/// - coming from [`process_students_csv_file`] and/or [`process_grades_csv_file`]
 #[tauri::command]
 async fn import_grades(
     window: Window,
@@ -69,7 +82,7 @@ async fn import_grades(
             import_key.clone(),
         )
         .await?;
-        log::info!("succesfully uploaded reset key password");
+        log::info!("successfully uploaded reset key password");
     }
 
     let config = Configuration {
@@ -81,6 +94,7 @@ async fn import_grades(
         ..Configuration::new()
     };
 
+    // fetches data of users(already registered students) from the server, will add imported data to these later
     let users = api_import_users_get(&config, None, None, None, None)
         .await
         .map_err(handle_api_err)?;
@@ -88,41 +102,43 @@ async fn import_grades(
     log::info!("users fetched from server already there ({num_users})");
     log::trace!("{users:?}");
 
-    window.emit("import-users", num_users).unwrap();
+    window.emit("import-users", num_users).unwrap(); // GUI report
 
     let imported_grade_map =
         process_grades_csv_file(grades_file_path).map_err(|err| err.to_string())?;
 
-    let students_map = if let Some(path) = students_file_path {
+    let imported_student_info_map = if let Some(path) = students_file_path {
         process_students_csv_file(path).map_err(|err| err.to_string())?
     } else {
-        HashMap::new()
+        HashMap::new() // leave it empty if file path not provided
     };
 
-    let mut count = 0;
+    let mut count = 0; // number of users already processed
     for user in users {
         log::debug!("processing {count}. user: {user:?}");
-        let om_code_hashed = &user.om_code_hashed.clone().unwrap().unwrap();
-        let Some(user_grades) = imported_grade_map.get(om_code_hashed) else {
+        let hashed_om = &user.om_code_hashed.clone().unwrap().unwrap(); // used as key to its data
+        let Some(user_grades) = imported_grade_map.get(hashed_om) else {
             log::warn!("no imported grades found");
             continue;
         };
-        log::trace!("user's freshly imported grades {user_grades:?}");
+        log::trace!("user's freshly imported grades: {user_grades:?}");
 
-        let public_key = user.public_key.clone().unwrap().unwrap();
-        log::debug!("user's public key: {public_key:?}");
+        let pub_key = user.public_key.clone().unwrap().unwrap(); // public key used for encryption
+        log::debug!("user's public key: {pub_key:?}");
 
+        // extract student info from data provided, fall back to grades sometimes containing it
         let (school_class, student_name) =
-            if let Some(student_info) = &students_map.get(om_code_hashed) {
+            if let Some(student_info) = &imported_student_info_map.get(hashed_om) {
                 (Some(&student_info.class), &student_info.name)
             } else {
-                log::warn!("user not found in student data, falling back to grades");
+                log::warn!("user not found in students' data, falling back to grades");
                 let cls = user_grades.iter().find_map(|g| g.school_class.as_ref());
                 (cls, &user_grades[0].student_name)
             };
         log::debug!("user's school class: {school_class:?}");
         log::debug!("user's name: {student_name}");
 
+        // pack useful information about user to be sent
         let grade_collection = GradeCollection {
             grades: user_grades.clone(),
             school_class: school_class.cloned(),
@@ -136,7 +152,7 @@ async fn import_grades(
             &config,
             &user.id.unwrap().to_string(),
             Some(ImportImportGradesRequestBody {
-                json_encrypted: grade_collection.to_encrypted_json(public_key)?,
+                json_encrypted: grade_collection.to_encrypted_json(pub_key)?,
             }),
         )
         .await
@@ -146,12 +162,15 @@ async fn import_grades(
         count += 1;
         window
             .emit("import-progress", (count / num_users) * 100)
-            .unwrap();
+            .unwrap(); // GUI progress report
     }
 
     Ok(())
 }
 
+/// GET status of server
+/// # Errors
+/// request
 #[tauri::command]
 async fn status(blueboard_url: String) -> Result<StatusViewServiceStatusResponse, String> {
     let mut config = Configuration::new();
@@ -169,12 +188,11 @@ fn main() {
     let log_p = std::path::Path::new(".lovassyapp-backboard.log");
     ftail::Ftail::new()
         .console(log::LevelFilter::Info)
-        .single_file(log_p, true, log::LevelFilter::Debug)
+        .single_file(log_p, true, log::LevelFilter::Debug) // TODO: support user-defined log level
         .init()
-        .unwrap();
+        .unwrap(); // logs to `stderr` and file at runtime dir as well
 
     tauri::Builder::default()
-        .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_autostart::Builder::new().build())
         .plugin(tauri_plugin_shell::init())
@@ -191,5 +209,5 @@ fn main() {
             import_grades
         ])
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .expect("encountered an unexpected, fatal error while running Tauri application");
 }
