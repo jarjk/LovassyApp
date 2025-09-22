@@ -169,7 +169,7 @@ fn main() {
     let log_p = std::path::Path::new(".lovassyapp-backboard.log");
     ftail::Ftail::new()
         .console(log::LevelFilter::Info)
-        .single_file(&log_p, true, log::LevelFilter::Debug)
+        .single_file(log_p, true, log::LevelFilter::Debug)
         .init()
         .unwrap();
 

@@ -2,7 +2,7 @@ use api::models::ImportIndexUsersResponse;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-/// NOTE: skipped fields on deserialization are: ["Születési idő", "Utolsó mentés dátuma", "Százalékos értékelés"]
+/// NOTE: skipped fields on deserialization are: "Születési idő", "Utolsó mentés dátuma", "Százalékos értékelés"
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct BackboardGrade {
