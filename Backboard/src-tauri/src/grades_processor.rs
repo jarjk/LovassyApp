@@ -1,5 +1,6 @@
 use api::models::ImportIndexUsersResponse;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "PascalCase")]
@@ -44,8 +45,9 @@ pub struct BackboardGrade {
     last_save_date: String,
 }
 impl BackboardGrade {
-    pub fn hashed_om_code(&self) -> String {
-        crate::cryptography::hash(&self.om_code)
+    /// replaces `om_code` with empty string
+    pub fn hashed_om_code(&mut self) -> String {
+        crate::cryptography::hash(&std::mem::take(&mut self.om_code))
     }
 }
 
@@ -59,33 +61,43 @@ pub struct BackboardStudent {
     pub class: String,
 }
 impl BackboardStudent {
-    pub fn hashed_om_code(&self) -> String {
-        crate::cryptography::hash(&self.om_code)
+    /// replaces `om_code` with empty string
+    pub fn hashed_om_code(&mut self) -> String {
+        crate::cryptography::hash(&std::mem::take(&mut self.om_code))
     }
 }
 
-pub fn process_grades_csv_file(path: String) -> Result<Vec<BackboardGrade>, csv::Error> {
+pub fn process_grades_csv_file(
+    path: String,
+) -> Result<HashMap<String, Vec<BackboardGrade>>, csv::Error> {
     log::info!("processing grades from {path:?}");
     let mut csv_raw = csv::ReaderBuilder::new().delimiter(b';').from_path(path)?;
-    let mut grades = Vec::new();
+    let mut grades: HashMap<String, Vec<BackboardGrade>> = HashMap::new();
     for grade in csv_raw.deserialize() {
-        grades.push(grade?);
+        let mut grade: BackboardGrade = grade?;
+        grades
+            .entry(grade.hashed_om_code())
+            .or_default()
+            .push(grade);
     }
     log::info!("successfully processed grades");
-    log::debug!("{grades:?}");
+    log::trace!("hashed-om-id mapped grades: {grades:?}");
 
     Ok(grades)
 }
 
-pub fn process_students_csv_file(path: String) -> Result<Vec<BackboardStudent>, csv::Error> {
+pub fn process_students_csv_file(
+    path: String,
+) -> Result<HashMap<String, BackboardStudent>, csv::Error> {
     log::info!("processing students from {path:?}");
     let mut csv_raw = csv::ReaderBuilder::new().delimiter(b';').from_path(path)?;
-    let mut students = Vec::new();
+    let mut students = HashMap::new();
     for student in csv_raw.deserialize() {
-        students.push(student?);
+        let mut student: BackboardStudent = student?;
+        students.insert(student.hashed_om_code(), student);
     }
     log::info!("successfully processed students");
-    log::debug!("{students:?}");
+    log::trace!("hashed-om-id mapped students: {students:?}");
 
     Ok(students)
 }

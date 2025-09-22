@@ -14,9 +14,7 @@ use api::models::{
     ImportImportGradesRequestBody, ImportUpdateResetKeyPasswordRequestBody,
     StatusViewServiceStatusResponse,
 };
-use grades_processor::{
-    BackboardGrade, GradeCollection, process_grades_csv_file, process_students_csv_file,
-};
+use grades_processor::{GradeCollection, process_grades_csv_file, process_students_csv_file};
 use std::collections::HashMap;
 use tauri::{Emitter, Window};
 use tauri_plugin_autostart::MacosLauncher;
@@ -88,41 +86,28 @@ async fn import_grades(
         .map_err(handle_api_err)?;
     let num_users = users.len();
     log::info!("users fetched from server already there ({num_users})");
-    log::debug!("{users:?}");
+    log::trace!("{users:?}");
 
     window.emit("import-users", num_users).unwrap();
 
-    let imported_grades =
+    let imported_grade_map =
         process_grades_csv_file(grades_file_path).map_err(|err| err.to_string())?;
-    let mut imported_grade_map: HashMap<String, Vec<BackboardGrade>> = HashMap::new();
-    for grade in imported_grades {
-        imported_grade_map
-            .entry(grade.hashed_om_code())
-            .or_default()
-            .push(grade);
-    }
-    log::debug!("om-id mapped grades: {imported_grade_map:?}");
 
     let students_map = if let Some(path) = students_file_path {
-        let students = process_students_csv_file(path).map_err(|err| err.to_string())?;
-        students
-            .into_iter()
-            .map(|s| (s.hashed_om_code(), s))
-            .collect::<HashMap<_, _>>()
+        process_students_csv_file(path).map_err(|err| err.to_string())?
     } else {
         HashMap::new()
     };
-    log::debug!("hashed om-id mapped students: {students_map:?}");
 
     let mut count = 0;
     for user in users {
-        log::debug!("processing {user:?}");
+        log::debug!("processing {count}. user: {user:?}");
         let om_code_hashed = &user.om_code_hashed.clone().unwrap().unwrap();
         let Some(user_grades) = imported_grade_map.get(om_code_hashed) else {
             log::warn!("no imported grades found");
             continue;
         };
-        log::debug!("freshly imported grades {user_grades:?}");
+        log::trace!("user's freshly imported grades {user_grades:?}");
 
         let public_key = user.public_key.clone().unwrap().unwrap();
         log::debug!("user's public key: {public_key:?}");
@@ -136,7 +121,6 @@ async fn import_grades(
                 (cls, &user_grades[0].student_name)
             };
         log::debug!("user's school class: {school_class:?}");
-
         log::debug!("user's name: {student_name}");
 
         let grade_collection = GradeCollection {
@@ -177,7 +161,7 @@ async fn status(blueboard_url: String) -> Result<StatusViewServiceStatusResponse
     let res = api_status_service_status_get(&config)
         .await
         .map_err(handle_api_err);
-    log::debug!("service status: {res:?}");
+    log::trace!("service status: {res:?}");
     res
 }
 
