@@ -144,9 +144,9 @@ pub struct GradeCollection {
     pub user: BackboardUser,
 }
 impl GradeCollection {
-    /// convert the [GradeCollection] to json and encrypt it to be safely transferred over the wire to the server
+    /// convert the [`GradeCollection`] to json and encrypt it to be safely transferred over the wire to the server
     /// # Errors
-    /// coming from [serde_json::to_string] and [crate::cryptography::kyber_encrypt]
+    /// coming from [`serde_json::to_string`] and [`crate::cryptography::kyber_encrypt`]
     pub fn to_encrypted_json(&self, pub_key: String) -> Result<String, String> {
         log::info!("encrypting user's grade collection");
         let as_json = serde_json::to_string(&self).map_err(|e| e.to_string())?;

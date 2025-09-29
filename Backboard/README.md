@@ -27,7 +27,10 @@ Regisztrál 3 `invoke_handler`t, amit a [frontend]ről lehet elindítani, ezek v
 Tehát importnál először elküldi a [szerver]nek az *import kulcsot* ha szükséges, majd lekéri az ott már beregisztrált tanulók adatait,
 hogy aztán az újonnan feltöltött jegyeiket hozzá adja, vissza küldje azokat.
 Onnan egy új bejelentkezés után az adatbázisból a felhasználónak be is importálódnak, meg is jellenek az új jegyek.
-Az app 2 helyre ír *log*okat: a futtatás mappájában egy `.lovassyapp-backboard.log` fájlba, továbbá a *konzol*ra, ha ez létezik.
+
+**Fontos:** Az app 2 helyre ír *log*okat: a futtatás mappájában egy `.lovassyapp-backboard.log` fájlba, továbbá a *konzol*ra, ha ez létezik. Az alapértelmezett `INFO` log szint megváltoztatható a `RUST_LOG` környezeti változó definiálásával.
+Ennek értékei lehetnek: `trace, debug, info, warn, error`.
+Pl.: `RUST_LOG=debug pnpm tauri dev`, `RUST_LOG=warn './LovassyApp - Backboard'`.
 
 **Fontos**: van egy-egy tesztelni való *csv*: [évközi jegyek E-Krétából], továbbá [tanulók adatai E-Krétából].
 Ilyen formátumban exportál a Kréta pillanatnyilag, később ha netalántán változna, frissíteni kell az *elemző*ket.

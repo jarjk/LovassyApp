@@ -60,7 +60,7 @@ async fn upload_reset_key_password(
 /// if `students_file_path` is provided: upload|update the information of the students
 /// if `update_rest_key_password`: upload the `reset_key_password`
 /// # Errors
-/// - coming from [upload_reset_key_password]
+/// - coming from [`upload_reset_key_password`]
 /// - invalid `import_key`
 /// - something with the PUT or GET requests
 /// - coming from [`process_students_csv_file`] and/or [`process_grades_csv_file`]
@@ -187,8 +187,8 @@ async fn status(blueboard_url: String) -> Result<StatusViewServiceStatusResponse
 fn main() {
     let log_p = std::path::Path::new(".lovassyapp-backboard.log");
     ftail::Ftail::new()
-        .console(log::LevelFilter::Info)
-        .single_file(log_p, true, log::LevelFilter::Debug) // TODO: support user-defined log level
+        .console_env_level()
+        .single_file_env_level(log_p, true)
         .init()
         .unwrap(); // logs to `stderr` and file at runtime dir as well
 
