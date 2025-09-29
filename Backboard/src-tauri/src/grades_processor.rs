@@ -1,5 +1,5 @@
 //! # Grades Processor
-//! provides bindings and functions necessary to import grades and user(student) data
+//! provides bindings and functions necessary to import grades and user(student) data\
 //! also processes imported data to match the format of the server, where it will be sent to
 
 use api::models::ImportIndexUsersResponse;
@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 /// # Backboard Grade
-/// bindings to parse a grade, that comes from an [E-Kreta](https://e-kreta.hu) export created by a school admin
+/// bindings to parse a grade, that comes from an [E-Kreta](https://e-kreta.hu) export created by a school admin\
 /// **NOTE**: skipped fields on deserialization are: "Születési idő", "Utolsó mentés dátuma", "Százalékos értékelés"
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "PascalCase")]
@@ -68,8 +68,8 @@ impl BackboardStudent {
     }
 }
 
-/// reads, parses and processes a csv grades export from the `path`
-/// a valid example can be found [here](../test_grades.csv)
+/// reads, parses and processes a csv grades export from the `path`\
+/// a valid example can be found [here](../test_grades.csv)\
 /// **NOTE**: the csv shall use the ';' character as delimiter
 /// # Errors
 /// invalid csv
@@ -92,8 +92,8 @@ pub fn process_grades_csv_file(
     Ok(grades)
 }
 
-/// reads, parses and processes a csv student-info export from the `path`
-/// a valid example can be found [here](../test_students.csv)
+/// reads, parses and processes a csv student-info export from the `path`\
+/// a valid example can be found [here](../test_students.csv)\
 /// **NOTE**: the csv shall use the ';' character as delimiter
 /// # Errors
 /// invalid csv
@@ -113,7 +113,7 @@ pub fn process_students_csv_file(
     Ok(students)
 }
 
-/// data of a user(student) that comes from the server
+/// data of a user(student) that comes from the server\
 /// will be used to add further grades and/or update the information of the account
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "PascalCase")]
@@ -133,7 +133,7 @@ impl From<ImportIndexUsersResponse> for BackboardUser {
     }
 }
 
-/// a nice pack of data containing all the relevant information about a student
+/// a nice pack of data containing all the relevant information about a student\
 /// it will be sent to the server once further encrypted
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "PascalCase")]

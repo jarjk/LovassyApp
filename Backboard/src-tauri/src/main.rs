@@ -1,3 +1,4 @@
+#![doc = include_str!("../../README.md")]
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
@@ -55,9 +56,9 @@ async fn upload_reset_key_password(
     .map_err(handle_api_err)
 }
 
-/// upload all the new [grades][grades_processor::BackboardGrade] to each registered user's account on the server
-/// **NOTE**: imported data won't be visible right away, check out the code there to see what happens ;)
-/// if `students_file_path` is provided: upload|update the information of the students
+/// upload all the new [grades][grades_processor::BackboardGrade] to each registered user's account on the server\
+/// **NOTE**: imported data won't be visible right away, check out the server code to see what happens ;)\
+/// if `students_file_path` is provided: upload|update the information of the students\
 /// if `update_rest_key_password`: upload the `reset_key_password`
 /// # Errors
 /// - coming from [`upload_reset_key_password`]

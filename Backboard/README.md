@@ -30,7 +30,7 @@ Onnan egy új bejelentkezés után az adatbázisból a felhasználónak be is im
 
 **Fontos:** Az app 2 helyre ír *log*okat: a futtatás mappájában egy `.lovassyapp-backboard.log` fájlba, továbbá a *konzol*ra, ha ez létezik. Az alapértelmezett `INFO` log szint megváltoztatható a `RUST_LOG` környezeti változó definiálásával.
 Ennek értékei lehetnek: `trace, debug, info, warn, error`.
-Pl.: `RUST_LOG=debug pnpm tauri dev`, `RUST_LOG=warn './LovassyApp - Backboard'`.
+Pl.: `RUST_LOG=debug pnpm tauri dev`, *windows*on: `$env:RUST_LOG="warn"; & '.\LovassyApp - Backboard.exe'`.
 
 **Fontos**: van egy-egy tesztelni való *csv*: [évközi jegyek E-Krétából], továbbá [tanulók adatai E-Krétából].
 Ilyen formátumban exportál a Kréta pillanatnyilag, később ha netalántán változna, frissíteni kell az *elemző*ket.
@@ -47,6 +47,10 @@ Amennyiben ez megvan, ajánlott a `Backboard` mappában a `pnpm install` parancs
 ## Ajánlott fejlesztői környezet
 
 - [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+
+## Kód dokumentáció
+
+Ha meg szeretnéd tekinteni (ezt) plusz a `Backboard` kód összes dokumentációját, használd a `cargo doc --open` parancsot.
 
 [`openapi-generator`]: https://openapi-generator.tech/
 [Rust]: https://rust-lang.org/
