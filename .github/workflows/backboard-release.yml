@@ -12,8 +12,11 @@ jobs:
       matrix:
         include:
           - platform: 'macos-latest'
+            args: '--no-bundle'
           - platform: 'ubuntu-24.04'
+            args: '--no-bundle'
           - platform: 'windows-latest'
+            args: ''
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -51,7 +54,7 @@ jobs:
           cd Backboard
           pnpm install --no-frozen-lockfile
       - name: Build Backboard
-        uses: tauri-apps/tauri-action@v0
+        uses: tauri-apps/tauri-action@b0ef17206667da0c483149d90d1ef261f6bc2582
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -61,3 +64,5 @@ jobs:
           releaseDraft: true
           prerelease: false
           projectPath: ./Backboard
+          args: ${{ matrix.args }}
+          uploadPlainBinary: true
