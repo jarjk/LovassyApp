@@ -11,8 +11,7 @@ jobs:
       matrix:
         dotnet-version: ['8.0']
     steps:
-      - name: Checkout master
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v3
         with:
@@ -45,12 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and deploy Boardlight
     steps:
-      - name: Checkout master
-        uses: actions/checkout@v3
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+      - uses: actions/checkout@v3
       - uses: oven-sh/setup-bun@v2
       - name: Install Boardlight dependencies
         run: |
