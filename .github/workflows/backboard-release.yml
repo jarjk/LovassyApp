@@ -27,12 +27,7 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        id: pnpm-install
-        with:
-          version: latest
-          run_install: false
+      - uses: oven-sh/setup-bun@v2
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -52,7 +47,7 @@ jobs:
       - name: Install Backboard dependencies
         run: |
           cd Backboard
-          pnpm install --no-frozen-lockfile
+          bun install --no-frozen-lockfile
       - name: Build Backboard
         uses: tauri-apps/tauri-action@ac619d29811fb194f834c2f550099b316d301c8c
         env:

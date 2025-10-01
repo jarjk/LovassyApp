@@ -18,13 +18,7 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        id: pnpm-install
-        with:
-          version: latest
-          run_install: false
-
+      - uses: oven-sh/setup-bun@v2
       - name: Install Tauri dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
@@ -50,7 +44,7 @@ jobs:
       - name: Install Backboard dependencies
         run: |
           cd Backboard
-          pnpm install --no-frozen-lockfile
+          bun install --no-frozen-lockfile
 
       - name: Check, test and build Backboard
         run: |
@@ -58,7 +52,7 @@ jobs:
           cargo check
           cargo test
           cd .. # Back to board
-          pnpm tauri build --ci --no-bundle
+          bun tauri build --ci --no-bundle
 
       - name: Commit new API Client
         uses: stefanzweifel/git-auto-commit-action@v4

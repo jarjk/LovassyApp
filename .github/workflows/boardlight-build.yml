@@ -16,24 +16,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        id: pnpm-install
-        with:
-          version: latest
-          run_install: false
+      - uses: oven-sh/setup-bun@v2
       - name: Install Boardlight dependencies
         run: |
           cd Boardlight
-          pnpm install --no-frozen-lockfile
+          bun install --no-frozen-lockfile
       - name: Generate Typescript API Client
         run: |
             cd Boardlight
-            pnpm generate-api-client
+            bun run generate-api-client
       - name: Build Boardlight
         run: |
           cd Boardlight
-          pnpm build
+          bun run build
       - name: Commit new API Client
         uses: stefanzweifel/git-auto-commit-action@v4
         with:

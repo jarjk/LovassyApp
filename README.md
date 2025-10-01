@@ -58,7 +58,7 @@ Az első indítás előtt konfigurálj lokálisan egy postgres adatbázist a `Bl
 
 #### Boardlight
 
-A Boardlight futtatásához szükséges a [Node.js](https://nodejs.org/en/) és a [pnpm](https://pnpm.io/) telepítése. Amennyiben ez megvan ajánlott a `Boardlight` mappában a `pnpm install` parancs után a `pnpm dev` parancs futtatása.
+A Boardlight futtatásához szükséges a [Node.js](https://nodejs.org/en/) és a [bun](https://bun.sh/) telepítése. Amennyiben ez megvan ajánlott a `Boardlight` mappában a `bun install` parancs után a `bun dev` parancs futtatása.
 
 **Fontos**: Futtatás előtt hozz létre egy `.env` fájlt a `Boardlight` mappában a `.env.example` fájl alapján és töltsd ki!
 
