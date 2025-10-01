@@ -1,6 +1,7 @@
 name: Blueboard Build
 run-name: ${{ github.actor }} is doing a development build of Blueboard 🚀
 on:
+  workflow_dispatch:
   push:
     branches:
       - master

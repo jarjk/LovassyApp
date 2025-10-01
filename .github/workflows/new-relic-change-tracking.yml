@@ -1,5 +1,6 @@
 name: Blueboard Change Tracking Marker
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: [ "Application Stack Deploy" ]
     branches: [ master ]

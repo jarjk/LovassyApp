@@ -1,6 +1,7 @@
 name: Boardlight Build
 run-name: ${{ github.actor }} is doing a development build of Boardlight 🚀
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: ["Blueboard Build"]
     branches: [master]

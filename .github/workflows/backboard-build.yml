@@ -12,6 +12,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v5
       - uses: oven-sh/setup-bun@v2
       - name: Install Tauri dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
