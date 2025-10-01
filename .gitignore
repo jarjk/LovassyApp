@@ -273,7 +273,6 @@ __pycache__/
 
 # End of https://www.toptal.com/developers/gitignore/api/aspnetcore
 
-**/bun.lock
 **/pnpm-lock.yaml
 
 Blueboard/Resources/**
