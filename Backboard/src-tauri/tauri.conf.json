@@ -25,7 +25,7 @@
     "withGlobalTauri": false,
     "windows": [
       {
-        "decorations": false,
+        "decorations": true,
         "fullscreen": false,
         "resizable": true,
         "title": "LovassyApp - Backboard",
