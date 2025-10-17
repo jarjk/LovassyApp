@@ -5,8 +5,8 @@ use base64::{Engine, engine::general_purpose};
 use crypto_hash::{Algorithm, Hasher};
 use libaes::Cipher;
 use pbkdf2::pbkdf2_hmac_array;
-use pqc_kyber::{KyberError, encapsulate};
 use rand::random;
+use safe_pqc_kyber::{KyberError, encapsulate};
 use sha2::Sha512;
 use std::io::Write;
 
