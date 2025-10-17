@@ -29,7 +29,7 @@ sha2 = "0.10.9"
 libaes = "0.7.0"
 ftail = { version = "0.3.1", features = ["console", "formatted", "single_file"], default-features = false }
 log = "0.4.28"
-csv = "1.3.1"
+csv = "1.4.0"
 safe_pqc_kyber = { version = "0.6.3", default-features = false, features = ["std"] }
 
 [features]
