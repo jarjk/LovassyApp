@@ -21,16 +21,16 @@ tauri-plugin-store = "2"
 api = { path = "../src-api" }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-crypto-hash = "0.3.4"
-base64 = "0.22.1"
-rand = "0.8.5"
-pbkdf2 = "0.12.2"
-sha2 = "0.10.9"
-libaes = "0.7.0"
-ftail = { version = "0.3.1", features = ["console", "formatted", "single_file"], default-features = false }
-log = "0.4.28"
-csv = "1.3.1"
-safe_pqc_kyber = { version = "0.6.3", default-features = false, features = ["std"] }
+crypto-hash = "0.3"
+base64 = "0.22"
+rand = "0.8"
+pbkdf2 = "0.12"
+sha2 = "0.10"
+libaes = "0.7"
+ftail = { version = "0.3", features = ["console", "formatted", "single_file"], default-features = false }
+log = "0.4"
+csv = "1.4"
+safe_pqc_kyber = { version = "0.6", default-features = false, features = ["std"] }
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
