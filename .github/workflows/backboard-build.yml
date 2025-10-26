@@ -61,7 +61,7 @@ jobs:
           pnpm tauri build --ci --no-bundle
 
       - name: Commit new API Client
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           file_pattern: Backboard/src-api/**
           commit_message: Updated the Rust API client for Backboard

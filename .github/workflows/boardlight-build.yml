@@ -35,7 +35,7 @@ jobs:
           cd Boardlight
           pnpm build
       - name: Commit new API Client
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           file_pattern: Boardlight/src/api/generated/**
           commit_message: Updated the Typescript API client for Boardlight
