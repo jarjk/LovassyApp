@@ -48,7 +48,7 @@ jobs:
       - name: Checkout master
         uses: actions/checkout@v5
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
           node-version: 18
       - name: Install pnpm
