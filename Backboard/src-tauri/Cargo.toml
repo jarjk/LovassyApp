@@ -25,7 +25,7 @@ crypto-hash = "0.3"
 base64 = "0.22"
 rand = "0.8"
 pbkdf2 = "0.12"
-sha2 = "0.10"
+sha2 = "0.11"
 libaes = "0.7"
 ftail = { version = "0.3", features = ["console", "formatted", "single_file"], default-features = false }
 log = "0.4"
